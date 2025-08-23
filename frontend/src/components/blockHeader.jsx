@@ -12,7 +12,7 @@ export const BlockHeader = ({ block, states }) => {
                 Total
                 <Chip
                     className='bg-black/5 max-h-[21px] p-0 font-poppins font-medium text-sm flex items-center justify-center'
-                >{states.active + states.inactive + states.maintenance}</Chip>
+                >{(states?.active + states?.inactive + states?.maintenance) || 0}</Chip>
             </div>
         </div>
     )

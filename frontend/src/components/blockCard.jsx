@@ -5,7 +5,7 @@ import { BlockHeader } from './blockHeader';
 export const BlockCard = (
   {
     block,
-    states = []
+    states = [],
   }
 ) => {
 

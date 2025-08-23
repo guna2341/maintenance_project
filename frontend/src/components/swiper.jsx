@@ -10,13 +10,15 @@ import { BlockCard } from './blockCard';
 
 export const SwiperComponent = (
     {
-        blocks
+        blocks,
+        onClick
     }
 ) => {
     return (
         <>
             <Swiper
-                slidesPerView={3.2}
+                slidesPerView={"auto"}
+                spaceBetween={25} 
                 pagination={{
                     clickable: true,
                 }}
@@ -25,10 +27,13 @@ export const SwiperComponent = (
                 modules={[FreeMode, Mousewheel, Navigation, Pagination]}
                 className='swiper'
             >
-                {blocks.map(item => (
-                    <SwiperSlide key={item.id}>
+                {blocks.map((item,index) => (
+                    <SwiperSlide key={item.id}
+                    onClick={() => onClick(index)}
+                    >
                         <BlockCard
                             key={item?.id}
+                            index={index}
                             block={item?.block.toUpperCase()}
                             states={item?.states}
                         />

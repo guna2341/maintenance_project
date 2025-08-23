@@ -27,15 +27,17 @@ export const PieChart = (
             "label": "Inactive",
             "value": inactive,
             "color": "#ED1B24"
-        }
+        },
+        
     ]
 
     return (
         <ResponsivePie
             data={pieData}
-            margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+            defaultHeight={280}
+            margin={{ top: 30, right: 120, bottom: 30, left: 130 }}
             colors={{ datum: 'data.color' }}
-            innerRadius={0.5}
+            innerRadius={0.6}
             padAngle={0.6}
             cornerRadius={0}
             arcLinkLabel={e => `${e.id}`}
@@ -55,10 +57,11 @@ export const PieChart = (
             arcLinkLabelsStraightLength={14}
             arcLabelsSkipAngle={10}
             arcLabelsTextColor="white"
+            
             theme={{
                 labels: {
                     text: {
-                        fontSize: 10,
+                        fontSize: 14,
                         fontWeight: 500,
                         fontFamily: 'poppins',
                         fill: 'white', 
@@ -66,7 +69,7 @@ export const PieChart = (
                 },
                 arcLinkLabels: {
                     text: {
-                        fontSize: 10,
+                        fontSize: 14,
                         fontWeight: 400,
                         fontFamily: 'poppins',
                     }

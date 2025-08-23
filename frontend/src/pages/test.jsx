@@ -1,5 +1,5 @@
 import React from 'react'
-import { AlertCard, Appbar, BlockCard, ControlCard, InputComponent, PieChart } from '../components'
+import { AlertCard, Appbar, BlockCard, ControlCard, InputComponent, PieChart, RoomStatus } from '../components'
 import { SwiperComponent } from '../components/swiper'
 import { blocks } from '../utils'
 
@@ -16,7 +16,8 @@ export const Test = () => {
       blocks = {blocks}
       />
       {/* <PieChart /> */}
-      <AlertCard/>
+      <AlertCard />
+      <RoomStatus />
     </div>
   )
 }

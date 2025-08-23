@@ -3,31 +3,29 @@ import { OperationCard } from './operationCard';
 import { BlockHeader } from './blockHeader';
 import { ControlCard } from './controlCard';
 
-export const BlockOverview = () => {
+export const BlockOverview = (
+    {
+        rooms,
+        block,
+        states
+    }
+) => {
 
     const keys = ["active", "inactive", "maintenance"];
 
     return (
-        <div className='border h-full w-full border-black/15 border-l-0 bg-custom-100 rounded-lg text-custom-300'>
-            <div className='border-l-3 h-full border-custom-200 rounded-[6px] py-2.5 px-6 flex flex-col gap-5'>
+        <div className='border w-full border-black/15 border-l-0 bg-custom-100 rounded-lg text-custom-300'>
+            <div className='border-l-3 border-custom-200 rounded-[6px] py-2.5 px-6 flex flex-col gap-5'>
 
                 <BlockHeader
-                    block={"SUNFLOWER BLOCK - Ground Floor"}
-                    states={{
-                        active: 10,
-                        inactive: 10,
-                        maintenance: 10,
-                    }}
+                    block={block}
+                    states={states}
                 />
                 <div className='flex items-center gap-4 h-full max-h-[81px]'>
                     {keys.map(item => (
                         <StateCard
                             className={"max-h-[81px] justify-between w-full bg-white"}
-                            states={{
-                                active: 10,
-                                inactive: 10,
-                                maintenance: 10,
-                            }}
+                            states={states}
                             item={item}
                             key={item}
                         />
@@ -41,13 +39,14 @@ export const BlockOverview = () => {
                     className='text-custom-300 font-medium font-poppins text-base'
                     >Room Controls</p>
 
-                <div className='grid grid-cols-5 items-center gap-2.5 w-full overflow-auto'>
-                    <ControlCard />
-                    <ControlCard />
-                    <ControlCard />
-                    <ControlCard />
-                    <ControlCard />
-                    <ControlCard />
+                    <div className='flex flex-wrap items-center gap-2.5 gap-y-4.5 w-full overflow-auto'>
+                        {rooms?.map(item => (
+                            <ControlCard
+                                key={item?.id}
+                                state={item?.state}
+                                roomName={item?.room}
+                            />
+                    ))}
                     </div>
                 </div>
             </div>

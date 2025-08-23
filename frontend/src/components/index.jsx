@@ -10,3 +10,4 @@ export { BlockHeader } from './blockHeader';
 export { ControlCard } from './controlCard';
 export { PieChart } from './pieChart';
 export { AlertCard } from './alertCard';
+export { RoomStatus } from './roomStatus';

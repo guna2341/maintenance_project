@@ -1,21 +1,29 @@
 import { Switch } from '@heroui/switch';
 import { cn } from '@heroui/theme';
 import React from 'react';
+import { ControlModal } from './controlModal';
 
 export const ControlCard = (
     {
-        state = false,
+        state = "active",
         handleState,
-        key
+        key,
+        roomName
     }
 ) => {
-
-    const [switchState, setSwitchState] = React.useState(state);
-
-    function handleSwitch() {
-        setSwitchState(!switchState);
-        handleState(key);
+    const [switchState, setSwitchState] = React.useState(state === "active" ? true : false);
+    const [open,setOpen] = React.useState(false);
+  
+  function handleSwitch() {
+      setOpen(true);
+  }
+  
+  function handleClose(e) {    
+    setOpen(false);
+    if (e === "confirm") {
+      setSwitchState(!switchState);
     }
+  }
 
   return (
     <div
@@ -33,10 +41,11 @@ export const ControlCard = (
           'border-custom-400 text-custom-400': switchState
         })}
       >
-        CB104
+        {roomName ? roomName : "Room Name"}
       </div>
       <Switch
         color="success"
+        disabled={state === "maintenance"}
         isSelected={switchState}
         onValueChange={handleSwitch}
         classNames={{
@@ -49,6 +58,12 @@ export const ControlCard = (
         size="lg"
         startContent={<span>ON</span>}
       />  
+      <ControlModal
+        isOpen={open}
+        onClose={handleClose}
+        roomName={roomName}
+        action={!switchState ? "on" : "off"}
+      />
     </div>
   )
 }
