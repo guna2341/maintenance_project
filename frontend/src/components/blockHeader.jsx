@@ -3,7 +3,7 @@ import { Chip } from '@heroui/chip'
 export const BlockHeader = ({ block, states }) => {
     return (
         <div
-            className='flex items-center gap-2 justify-between'
+            className='flex sm:flex-row flex-col items-center gap-2 justify-between'
         >
             <span
                 className='font-poppins font-semibold text-base'

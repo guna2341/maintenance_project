@@ -104,29 +104,29 @@ export const blocks = [
                 block: "First-Floor",
                 rooms: [
                     {
-                        id: "13",
+                        id: "1",
                         room: "MB101",
                         state: "active"
                     },
                     {
-                        id: "14",
+                        id: "2",
                         room: "MB102",
                         state: "maintenance",
                         issue: "Equipment Overhaul"
                     },
                     {
-                        id: "15",
+                        id: "3",
                         room: "MB103",
                         state: "active"
                     },
                     {
-                        id: "16",
+                        id: "4",
                         room: "MB104",
                         state: "inactive",
                         issue: "Cooling System Failure"
                     },
                     {
-                        id: "17",
+                        id: "5",
                         room: "MB105",
                         state: "active"
                     }

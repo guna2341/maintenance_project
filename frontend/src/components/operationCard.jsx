@@ -13,14 +13,14 @@ export const OperationCard = (
             <div className='flex items-center justify-between font-poppins font-normal text-sm'>
                 Operational Status
                 <CircularProgress
-                    size="lg"
+                    size="md"
                     showValueLabel
                     value={value}
                     classNames={{
                         base:"rotate-180",
-                        svg: "w-15 h-15",
+                        svg: "w-12 h-12",
                         indicator: "stroke-[url(#progress-gradient)]",
-                        value: "rotate-180 text-custom-700 font-poppins font-medium text-sm"
+                        value: "rotate-180 text-custom-700 font-poppins font-medium text-xs"
                     }}
                 />
             </div>

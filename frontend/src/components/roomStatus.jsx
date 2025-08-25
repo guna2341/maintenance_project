@@ -24,8 +24,8 @@ export const RoomStatus = ({
               </div>
           </div>
           <div className='flex flex-wrap gap-y-4 gap-x-4 mt-4'>
-          {block.floors?.map(items => items.rooms.map(item => (
-              <div className={cn('px-2 py-1 aspect-[4/4] w-fit rounded-full text-white flex items-center justify-center', {
+          {block.floors?.map((items,index) => items.rooms.map(item => (
+              <div className={cn('px-2 py-1 w-7.5 h-7.5 rounded-full text-white flex items-center justify-center', {
                   'bg-custom-400': item.state === 'active',
                   'bg-custom-500': item.state === 'inactive',
                   'bg-custom-200': item.state === 'maintenance'

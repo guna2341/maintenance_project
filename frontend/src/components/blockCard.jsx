@@ -14,7 +14,7 @@ export const BlockCard = (
     <Card
       radius='sm'
       shadow='sm'
-      className='min-w-[428px] border-l-0 p-0 cursor-pointer bg-custom-100 text-custom-300'
+      className='min-w-[250px] sm:min-w-[428px] border-l-0 p-0 cursor-pointer bg-custom-100 text-custom-300'
     >
       <div className='border-l-3 rounded-[8px] border-l-custom-200 border border-black/15'>
         <div className='px-3.5 py-2'>

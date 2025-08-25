@@ -17,7 +17,7 @@ export const AlertCard = ({
                 <div className='font-poppins text-center font-medium'>
                     No Issues found
                 </div>
-                </div>
+            </div>
         )
     };
 

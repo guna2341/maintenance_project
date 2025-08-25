@@ -31,7 +31,7 @@ export const BlockOverview = (
                         />
                     ))}
                     <OperationCard
-                    value={70}
+                    value={(states?.active/(states?.active + states?.inactive + states?.maintenance) * 100)}
                     />
                 </div>
                 <div className='flex flex-col gap-2.5'>

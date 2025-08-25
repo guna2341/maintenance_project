@@ -42,10 +42,10 @@ export const StateCard = (
     return (
         <div
             key={key}
-            className={`border font-poppins flex flex-col text-normal text-sm w-full h-full text-custom-300 border-black/10 py-2 px-3 rounded-xl ${className}`}
+            className={`border font-poppins flex flex-col text-normal sm:text-sm w-full h-full text-custom-300 border-black/10 py-2 px-3 rounded-xl ${className}`}
         >
             {item[0]?.toUpperCase() + item?.substring(1)}
-            <div className={`flex items-center h-full justify-between font-poppins font-medium text-xl ${chipClassname}`}>
+            <div className={`flex gap-2 items-center h-full justify-between font-poppins font-medium text-xl ${chipClassname}`}>
                 {states?.[item]}
                 <Chip
                     className={`${getBg(item)} p-0`}
