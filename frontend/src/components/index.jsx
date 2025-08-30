@@ -17,3 +17,4 @@ export { SearchNotFound } from './noSearch';
 export { ProfileMenu } from './profileMenu';
 export { SelectComponent } from './select';
 export { StateSummary } from './stateSummary';
+export { DisplayHeader } from './displayHeader';
