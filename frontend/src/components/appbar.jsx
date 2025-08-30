@@ -1,7 +1,12 @@
+import React from 'react';
 import { DownArrow, Logo } from '../assets';
 import { Chip } from '@heroui/chip';
+import { ProfileMenu } from './profileMenu';
+import { cn } from '@heroui/theme';
 
 export const Appbar = () => {
+    const [menu, setMenu] = React.useState(false)
+    console.log(menu)
     return (
         <div
             className='max-h-[80px] flex items-center justify-between bg-custom-100 p-8'
@@ -20,20 +25,32 @@ export const Appbar = () => {
                     </span>
                 </div>
             </div>
-            <div className='flex items-center'> 
+            <ProfileMenu
+            >
+                <div className='flex items-center'
+                onClick={() => setMenu(!menu)}
+                > 
                 <Chip
-                    className='bg-white cursor-pointer py-[5px] px-0 !h-fit border border-black/10 items-center'
+                        className={cn('bg-white cursor-pointer py-[5px] hover:shadow transition-all px-0 !h-fit border border-black/10 items-center', {
+                            'shadow' : menu
+                        })}
                 >
                     <div className='flex items-center gap-4'>
                         <div
-                            className='rounded-full font-poppins font-normal text-md sm:text-xl min-w-[25px] min-h-[25px] sm:min-w-[30px] sm:min-h-[30px] flex items-center justify-center text-white bg-orange-400'
+                            className='rounded-full font-poppins font-normal text-md sm:text-base min-w-[20px] min-h-[20px] sm:min-w-[25px] sm:min-h-[25px] flex items-center justify-center text-white bg-orange-400'
                         >
                             S
-                        </div>
-                        <DownArrow />
+                            </div>
+                            <span className={cn('transition-all',{
+                                'rotate-180': menu,
+                                'rotate-0': !menu
+                            })}>
+                                <DownArrow />
+                            </span>
                     </div>
                 </Chip>
-            </div>
+                </div>
+            </ProfileMenu>
         </div>
     )
 }

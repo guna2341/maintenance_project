@@ -1,60 +1,69 @@
-import React from 'react'
-import { Analytics, BlockOverview, DashboardHeader } from '../components'
-import { blocks } from '../utils';
-import { SwiperComponent } from '../components/swiper';
+import React from 'react';
+import { DashboardHeader, SearchNotFound } from '../components';
+import { UseDashboardStore } from '../stores';
+import { DashboardLayout } from '../layout/dashboardLayout';
+import { Button } from '@heroui/button';
+import { useNavigate } from "react-router-dom";
 
 export const Dashboard = () => {
-  const [search, setSearch] = React.useState("");
-  const [filteredBlock, setFilteredBlock] = React.useState([]);
-  const [height, setHeight] = React.useState(0);
-  const [index,setIndex] = React.useState(0);
+  const blocks = UseDashboardStore(e => e.blocks);
+  const filteredBlocks = UseDashboardStore(e => e.filteredBlocks);
+  const setFilter = UseDashboardStore(e => e.setFilter);
+  const [search, setSearch] = React.useState('');
+  const loaders = UseDashboardStore(e => e.loaders);
+  const nav = useNavigate();
 
   React.useEffect(() => {
     const filter = blocks.filter(item => item.block.toLowerCase().includes(search.toLowerCase()));
-    setFilteredBlock(filter);
-  }, [search, setSearch]);
-
+    setFilter(filter);
+  }, [blocks, search]);
 
   return (
     <div className='w-full h-full p-[50px] pt-4 flex flex-col gap-4 '>
+      <Button
+      onClick={() => nav("/displayBlocks")}
+      >click</Button>
       <div className='h-[calc(100%-30px)]'>
         <div>
           <DashboardHeader
+            loading={loaders.getLoading}
             onChange={e => setSearch(e.target.value)}
           />
         </div>
 
-        <div>
-          <SwiperComponent
-            blocks={filteredBlock}
-            onClick={e => setIndex(e)}
-          />
-        </div>
-
-        <div className={`flex h-full gap-5 items-stretch mt-2`}
-         >
-          <div className="flex-3 flex flex-col gap-10"
-            style={{ height: height > 0 ? `${height}px` : 'auto' }}
-          >
-            <div className="flex-1 flex flex-col gap-10 pb-1 overflow-y-auto scrollbar-thin scrollbar-thumb-custom-300/10 scrollbar-track-transparent">
-              {blocks[index].floors.map(item => (
-                <BlockOverview
-                  key={item?.id}
-                  block={`${blocks[index].block.toUpperCase()} - ${item?.block}`}
-                  states={blocks[index]?.states}
-                  rooms={item?.rooms}
-                />
-              ))}
+        {!loaders.getLoading && blocks.length === 0 ? (
+          <div className='flex flex-col items-center justify-center h-full'>
+            <div className='text-center p-8 bg-red-50 border border-red-200 rounded-lg max-w-md'>
+              <div className='text-red-600 text-xl mb-2'>⚠️</div>
+              <h3 className='text-lg font-semibold text-red-800 mb-2'>No Data Available</h3>
+              <p className='text-red-700 mb-4'>
+                Unable to load dashboard blocks. This might be due to a connection issue or server problem.
+              </p>
+              <Button
+                onPress={() => {
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 300);
+                }}
+                radius='md'
+                color='danger'
+                className='px-4 py-2 transition-colors'
+              >
+                Refresh Page
+              </Button>
             </div>
           </div>
+        ) :
 
-          <div className="flex-1.5 max-w-[400px] flex flex-col">
-            <Analytics
-              states={blocks[index]?.states}
-              block={blocks[index]}
-              onHeightChange={e => setHeight(e)} />
-          </div>
-        </div>
+          loaders.getLoading || filteredBlocks.length !== 0 ? (
+            <DashboardLayout filteredBlock={filteredBlocks} />
+          ) : (
+            <div className="w-full flex justify-center mt-8">
+              <SearchNotFound />
+            </div>
+          )
+        }
+
       </div>
     </div>
   )

@@ -1,3 +1,4 @@
+import { Skeleton } from '@heroui/skeleton';
 import { ResponsivePie } from '@nivo/pie'
 
 
@@ -5,7 +6,8 @@ export const PieChart = (
     {
         active = 45,
         maintenance = 20,
-        inactive = 35
+        inactive = 35,
+        loading
     }
 ) => {
 
@@ -29,7 +31,13 @@ export const PieChart = (
             "color": "#ED1B24"
         },
         
-    ]
+    ];
+
+    if (loading) {
+        return (<Skeleton
+        className='max-w-[150px] h-full aspect-auto mx-auto rounded-full'
+        />)
+}
 
     return (
         <ResponsivePie

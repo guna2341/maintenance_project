@@ -1,7 +1,7 @@
 import { Search } from '../assets';
 import { InputComponent } from './input';
 
-export const DashboardHeader = ({ onChange }) => {
+export const DashboardHeader = ({ onChange, search, loading }) => {
     return (
         <header className='flex w-full items-center justify-between pl-2'>
             <p className='font-poppins font-semibold text-xl'>
@@ -9,6 +9,8 @@ export const DashboardHeader = ({ onChange }) => {
             </p>
             <div>
                 <InputComponent
+                    isReadOnly={loading}
+                    value={search}
                     placeholder={"Search..."}
                     startContent={<span><Search /></span>}
                     onchange={onChange}

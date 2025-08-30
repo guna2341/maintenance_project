@@ -5,3 +5,7 @@ export { Inactive } from './svg/inactive';
 export { Maintenance } from './svg/maintenance';
 export { Search } from './svg/search';
 export { Alert } from './svg/alert';
+export { CloseEye } from './svg/closeEye';
+export { OpenEye } from './svg/openEye';
+export { NoSearch } from './svg/noSearch';
+export { Exit } from './svg/exit';

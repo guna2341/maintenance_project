@@ -2,6 +2,7 @@ import { Input } from "@heroui/input";
 
 export const InputComponent = ({
     key,
+    isReadOnly,
     isInvalid,
     value,
     name,
@@ -21,6 +22,7 @@ export const InputComponent = ({
         <Input
             name={name}
             value={value}
+            isReadOnly={isReadOnly}
             errorMessage={errorMessage}
             onChange={onchange}
             isInvalid={isInvalid}

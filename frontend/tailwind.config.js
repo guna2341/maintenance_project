@@ -28,13 +28,10 @@ export default {
           500: "#ED1B24",
           700: "#0074FF",
           800: "#003B83",
-        },
+          900: "#D32F2F",        },
       },
     },
   },
   darkMode: "class",
-  plugins: [
-    heroui(),
-    scrollbar({ nocompatible: true }),
-  ],
+  plugins: [heroui(), scrollbar({ nocompatible: true })],
 };

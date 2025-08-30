@@ -5,6 +5,9 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import { Provider } from "./provider.jsx";
 import "@/styles/globals.css";
+import "./api/interceptors/request.js";
+import './api/interceptors/response.js';
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

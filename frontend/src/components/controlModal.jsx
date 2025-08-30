@@ -3,10 +3,11 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@herou
 import { Button } from "@heroui/button";
 import { cn } from "@heroui/theme";
 
-export const ControlModal = ({ isOpen, onClose, roomName, action }) => {
+export const ControlModal = ({ isOpen, onClose, roomName, action, loading }) => {
     return (
         <Modal
             isOpen={isOpen}
+            hideCloseButton
             onClose={onClose}
             placement="center"
             classNames={{
@@ -29,8 +30,8 @@ export const ControlModal = ({ isOpen, onClose, roomName, action }) => {
                             })}>
                                     {action === "off" ? "turn off" : "turn on"}
                                 </span>{" "}
-                                the power supply for{" "}
-                                <span className="font-semibold">{roomName}</span>?
+                                the power supply for
+                                <span className="font-semibold"> {roomName}</span>?
                             </p>
                         </ModalBody>
 
@@ -39,12 +40,13 @@ export const ControlModal = ({ isOpen, onClose, roomName, action }) => {
                                 variant="bordered"
                                 radius="sm"
                                 color="default"
-                                onPress={() => onClose("close")}
-                                className="px-6"
+                                onPress={() => !loading && onClose("close")}
+                            className="px-6"
                             >
                                 Cancel
                             </Button>
-                            <Button
+                        <Button
+                                isLoading = {loading}
                                 color={action === "off" ? "danger" : "success"}
                                 radius="sm"
                                 className="px-6 border text-white"
@@ -52,7 +54,7 @@ export const ControlModal = ({ isOpen, onClose, roomName, action }) => {
                                     onClose("confirm");
                                 }}
                             >
-                                {action === "off" ? "Turn Off" : "Turn On"}
+                                {loading ? action === "off" ? "Turning off" : "Turning on" :  action === "off" ? "Turn Off" : "Turn On"}
                             </Button>
                         </ModalFooter>
                     </>

@@ -7,7 +7,7 @@ export const Analytics = ({
   onHeightChange,
   states,
   block,
-  rooms = []
+  loading,
  }) => {
   const analyticsRef = React.useRef(null);
   
@@ -49,6 +49,7 @@ export const Analytics = ({
             <div className='mb-3 px-2.5 text-base'>Overall Summary</div>
             <div className='h-[150px] w-full'>
               <PieChart
+                loading={loading}
                 active={states?.active}
                 inactive={states?.inactive}
                 maintenance={states?.maintenance}
@@ -58,10 +59,12 @@ export const Analytics = ({
 
           <div className='w-full flex flex-col gap-2.5 pb-1'>
             <AlertCard
+              loading={loading}
               block={block}
             />
             <RoomStatus
-            block={block} />
+              loading={loading}
+              block={block} />
           </div>
         </div>
       </div>

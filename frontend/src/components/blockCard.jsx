@@ -6,9 +6,9 @@ export const BlockCard = (
   {
     block,
     states = [],
+    loading = false
   }
 ) => {
-
   const keys = ["active", "inactive", "maintenance"];
   return (
     <Card
@@ -19,6 +19,7 @@ export const BlockCard = (
       <div className='border-l-3 rounded-[8px] border-l-custom-200 border border-black/15'>
         <div className='px-3.5 py-2'>
           <BlockHeader
+            loading={loading}
             block={block}
             states={states}
           />
@@ -30,7 +31,7 @@ export const BlockCard = (
           >
             {keys.map((item, index) => {
               return (
-                <StateCard states={states} key={index} item={item} />
+                <StateCard states={states} key={index} item={item} loading={loading} />
               )
             })}
           </div>
