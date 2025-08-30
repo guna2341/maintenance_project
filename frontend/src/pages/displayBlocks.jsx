@@ -33,31 +33,20 @@ const BlocksDashboard = () => {
     );
 
     const states = [
-        {
-            key: "total", label: "total", cardName: "Total Blocks", length: blocks.length
-        },
-        {
-            key: "active", label: "active", cardName: "Active rooms", length: blocks.reduce((sum, block) => sum + block.states.active, 0)
-        },
-        {
-            key: "inactive", label: "inactive", cardName: "Inactive rooms", length: blocks.reduce((sum, block) => sum + block.states.inactive, 0)
-        },
-        {
-            key: "maintenance", label: "maintenance", cardName: "Maintenance rooms", length: blocks.reduce((sum, block) => sum + block.states.maintenance, 0)
-        }
+        { key: "total", label: "total", cardName: "Total Blocks", length: blocks.length },
+        { key: "active", label: "active", cardName: "Active rooms", length: blocks.reduce((sum, block) => sum + block.states.active, 0) },
+        { key: "inactive", label: "inactive", cardName: "Inactive rooms", length: blocks.reduce((sum, block) => sum + block.states.inactive, 0) },
+        { key: "maintenance", label: "maintenance", cardName: "Maintenance rooms", length: blocks.reduce((sum, block) => sum + block.states.maintenance, 0) }
     ];
 
     return (
-        <div className="min-h-[calc(100%-80px)] bg-white p-2 pt-5">
+        <div className="min-h-[calc(100%-90px)] bg-white p-2 pt-5">
             <div className="max-w-7xl mx-auto h-full">
-
                 <DisplayHeader
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
                     handleClick={() => console.log("Click")}
                 />
-
-                {/* Stats Summary */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                     {states.map(item => (
                         <StateSummary
@@ -68,14 +57,12 @@ const BlocksDashboard = () => {
                             length={blocks.length}
                         />
                     ))}
-
                 </div>
-
                 {!loaders.getLoading && filteredBlocks.length === 0 ? (
                     <NoSearch />
                 ) : (
-                    <div className='h-[calc(100%-250px)] flex flex-col justify-between'>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div className='h-[calc(100%-235px)] flex flex-col justify-between'>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {loaders.getLoading ?
                                 Array(6).fill(null).map((_, index) => (
                                     <BlockCard key={index} loading={loaders.getLoading} />
@@ -85,8 +72,6 @@ const BlocksDashboard = () => {
                                     <BlockCard key={index} block={block.block} states={block.states} loading={loaders.getLoading} />
                                 ))}
                         </div>
-
-                        {/* Pagination */}
                         {totalPages > 1 && (
                             <div className="flex justify-center">
                                 <Pagination

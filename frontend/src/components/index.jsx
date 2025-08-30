@@ -18,3 +18,6 @@ export { ProfileMenu } from './profileMenu';
 export { SelectComponent } from './select';
 export { StateSummary } from './stateSummary';
 export { DisplayHeader } from './displayHeader';
+export { AccordianComponent } from './accordian';
+export { AddRoomModal } from './addRoom';
+export { AddFloor } from './addFloor';

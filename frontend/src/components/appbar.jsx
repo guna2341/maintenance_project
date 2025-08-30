@@ -6,7 +6,6 @@ import { cn } from '@heroui/theme';
 
 export const Appbar = () => {
     const [menu, setMenu] = React.useState(false)
-    console.log(menu)
     return (
         <div
             className='max-h-[80px] flex items-center justify-between bg-custom-100 p-8'
@@ -26,9 +25,10 @@ export const Appbar = () => {
                 </div>
             </div>
             <ProfileMenu
+                isOpen={menu}
+                setIsOpen={(open) => setMenu(open)}
             >
                 <div className='flex items-center'
-                onClick={() => setMenu(!menu)}
                 > 
                 <Chip
                         className={cn('bg-white cursor-pointer py-[5px] hover:shadow transition-all px-0 !h-fit border border-black/10 items-center', {

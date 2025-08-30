@@ -11,6 +11,7 @@ export const ControlCard = (
     roomName,
     loading,
     handleClick,
+    edit
   }
 ) => {
   const [switchState, setSwitchState] = React.useState(state === "active" ? true : false);
@@ -30,6 +31,11 @@ export const ControlCard = (
   }
 
   async function handleClose(e) {
+    if (e == "confirm" && edit) {
+      handleClick(switchState ? "active" : "inactive");
+      setOpen(false);
+      return;
+    }
     if (e === "confirm") {
       try {
         await handleClick(switchState ? "active" : "inactive");

@@ -3,11 +3,13 @@ import { Popover, PopoverTrigger, PopoverContent } from "@heroui/popover";
 import { Button } from '@heroui/button';
 import { Chip } from '@heroui/chip';
 import { Exit } from '../assets';
-export const ProfileMenu = ({ children }) => {
+export const ProfileMenu = ({ children, isOpen, setIsOpen }) => {
     return (
         <div
         >
-            <Popover placement="bottom-end"
+            <Popover
+                isOpen={isOpen} onOpenChange={(open) => setIsOpen(open)}
+                placement="bottom-end"
                 classNames={{
                 trigger:"aria-expanded:opacity-100 aria-expanded:scale-[1]"
             }}

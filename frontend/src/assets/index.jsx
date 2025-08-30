@@ -9,3 +9,6 @@ export { CloseEye } from './svg/closeEye';
 export { OpenEye } from './svg/openEye';
 export { NoSearch } from './svg/noSearch';
 export { Exit } from './svg/exit';
+export { BackArrow } from './svg/backArrow';
+export { Plus } from './svg/plus';
+export { Edit } from './svg/edit';

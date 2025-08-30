@@ -7,13 +7,13 @@ export const StateSummary = ({ cardName, length, label, loading = true }) => {
     function getBg(state) {
         switch (state) {
             case 'active':
-                return 'border-l-4 border-l-custom-400'
+                return 'border-l-4 border-l-custom-400/80'
             case 'inactive':
-                return 'border-l-4 border-l-custom-500'
+                return 'border-l-4 border-l-custom-500/80'
             case 'maintenance':
-                return 'border-l-4 border-l-custom-200'
+                return 'border-l-4 border-l-custom-200/90'
             default:
-                return 'border-l-4 border-l-gray-500'
+                return 'border-l-4 border-l-custom-300/70'
         }
     }
 
