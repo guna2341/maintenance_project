@@ -1,16 +1,20 @@
+import { addToast } from "@heroui/toast";
+
 const handleApiError = (error) => {
   if (error.response) {
     const { status, data } = error.response;
     switch (status) {
       case 401:
+
         function handleToast() {
-        //   addToast({
-        //     title: "Invalid token",
-        //     variant: "warning",
-        //   });
+          addToast({
+            title: "Invalid token",
+            variant: "warning",
+          });
         }
+        
         handleToast();
-        secureLocalStorage.removeItem("token");
+        localStorage.clear();
         setTimeout(() => {
           window.location.href = "/login";
         }, 1500);

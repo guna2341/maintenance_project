@@ -1,11 +1,27 @@
 import { Button } from '@heroui/button';
 import { Card, CardBody, CardHeader } from '@heroui/card';
 import { Input } from '@heroui/input';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Form } from "@heroui/form";
 import { CloseEye, OpenEye } from '../assets';
+import { UseAuthStore } from '../stores';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+
+      const nav = useNavigate();
+      const token = UseAuthStore(e => e.token);
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
+      React.useEffect(() => {
+        if (token) {
+          nav(`/${BASE_URL}/dashboard`);
+        }
+        else {
+            nav(`/${BASE_URL}/login`)
+        }
+      },[]);
+
+    const login = UseAuthStore(e => e.login);
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
@@ -16,7 +32,7 @@ const LoginPage = () => {
         email: false,
         password: false
     });
-
+    const ref = useRef();
     const handleInputChange = (field, value) => {
         setFormData(prev => ({
             ...prev,
@@ -41,11 +57,11 @@ const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-
-        setTimeout(() => {
-            setIsLoading(false);
-            console.log('Login attempt:', formData);
-        }, 2000);
+        const response = await login(formData.email,formData.password);
+        if (response?.state) {
+            nav(`/${BASE_URL}/dashboard`);
+        }
+        setIsLoading(false);
     };
 
     return (
@@ -98,6 +114,7 @@ const LoginPage = () => {
                                     <Input
                                         type={showPassword ? "text" : "password"}
                                         isRequired
+                                        ref={ref}
                                         label="Password"
                                         labelPlacement='outside-top'
                                         placeholder="Enter your password"
@@ -111,7 +128,10 @@ const LoginPage = () => {
                                         endContent={
                                             <span
                                                 className='cursor-pointer'
-                                                onClick={() => setShowPassword(!showPassword)}
+                                                onClick={() => {
+                                                    setShowPassword(!showPassword)
+                                                    ref.current.focus();
+                                                }}
                                             >
                                                 {!showPassword ? <CloseEye /> : <OpenEye />}
                                             </span>

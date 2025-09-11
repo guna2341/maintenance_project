@@ -21,3 +21,6 @@ export { DisplayHeader } from './displayHeader';
 export { AccordianComponent } from './accordian';
 export { AddRoomModal } from './addRoom';
 export { AddFloor } from './addFloor';
+export { AddRooms } from './addRooms';
+export { SideBar } from './sidebar';
+export { NotFound } from './noRoutes';

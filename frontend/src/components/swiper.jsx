@@ -16,6 +16,7 @@ export const SwiperComponent = (
     }
 ) => {
     const loaders = UseDashboardStore(e => e.loaders);
+
     return (
         <>
             <Swiper
@@ -38,7 +39,37 @@ export const SwiperComponent = (
                             <BlockCard loading={true} index={index}  />
                         </SwiperSlide>
                     ))
-                    : blocks?.map((item, index) => (
+                    : blocks?.map((item, index) =>{
+                        const states = {
+                            active: item.floors.reduce(
+                                (sum, floor) =>
+                                    sum +
+                                    (floor?.rooms?.reduce(
+                                        (roomSum, room) => roomSum + (room?.state === "active" ? 1 : 0),
+                                        0
+                                    ) || 0),
+                                0
+                            ),
+                            inactive: item.floors.reduce(
+                                (sum, floor) =>
+                                    sum +
+                                    (floor?.rooms?.reduce(
+                                        (roomSum, room) => roomSum + (room?.state === "inactive" ? 1 : 0),
+                                        0
+                                    ) || 0),
+                                0
+                            ),
+                            maintenance: item.floors.reduce(
+                                (sum, floor) =>
+                                    sum +
+                                    (floor?.rooms?.reduce(
+                                        (roomSum, room) => roomSum + (room?.state === "maintenance" ? 1 : 0),
+                                        0
+                                    ) || 0),
+                                0
+                            ),
+                        };
+                        return (
                         <SwiperSlide
                             key={index}
                             onClick={() => onClick(index)}
@@ -47,10 +78,10 @@ export const SwiperComponent = (
                                 loading={false}
                                 index={index}
                                 block={item?.block?.toUpperCase()}
-                                states={item?.states}
+                                states={states}
                             />
                         </SwiperSlide>
-                    ))}
+                    )})}
 
             </Swiper>
         </>

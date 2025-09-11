@@ -3,12 +3,14 @@ import { DownArrow, Logo } from '../assets';
 import { Chip } from '@heroui/chip';
 import { ProfileMenu } from './profileMenu';
 import { cn } from '@heroui/theme';
+import { UseAuthStore } from "../stores";
 
 export const Appbar = () => {
-    const [menu, setMenu] = React.useState(false)
+    const [menu, setMenu] = React.useState(false);
+    const email = UseAuthStore(e => e.email);
     return (
         <div
-            className='max-h-[80px] flex items-center justify-between bg-custom-100 p-8'
+            className='max-h-[80px] flex items-center justify-between bg-custom-100 p-8 border-b border-custom-1000/50'
         >
             <div className='flex items-center gap-2 sm:gap-4 h-full'>
            
@@ -39,7 +41,7 @@ export const Appbar = () => {
                         <div
                             className='rounded-full font-poppins font-normal text-md sm:text-base min-w-[20px] min-h-[20px] sm:min-w-[25px] sm:min-h-[25px] flex items-center justify-center text-white bg-orange-400'
                         >
-                            S
+                            {email[0].toUpperCase()}
                             </div>
                             <span className={cn('transition-all',{
                                 'rotate-180': menu,

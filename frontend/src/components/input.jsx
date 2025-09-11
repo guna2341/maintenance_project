@@ -1,10 +1,10 @@
 import { Input } from "@heroui/input";
 
 export const InputComponent = ({
-    key,
     isReadOnly,
     isInvalid,
     value,
+    autofocus,
     name,
     errorMessage,
     description,
@@ -20,14 +20,15 @@ export const InputComponent = ({
 }) => {
     return (
         <Input
+            key={name}
             name={name}
-            value={value}
+            autoFocus={autofocus}
+            value={value ?? ""}
             isReadOnly={isReadOnly}
             errorMessage={errorMessage}
             onChange={onchange}
             isInvalid={isInvalid}
             isRequired={isRequired}
-            key={key}
             radius="sm"
             description={description}
             label={label}

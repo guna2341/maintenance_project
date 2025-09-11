@@ -1,29 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardBody } from '@heroui/card';
-import { Select, SelectItem } from "@heroui/select"
-import { InputComponent, BlockCard, StateSummary, DisplayHeader } from "../components";
+import { BlockCard, StateSummary, DisplayHeader } from "../components";
 import { Button } from '@heroui/button';
 import { Pagination } from "@heroui/pagination";
-import { Chip } from '@heroui/chip';
-import { UseDashboardStore } from '../stores';
+import { UseDashboardStore, UseEditBlockStore } from '../stores';
+import { useNavigate } from 'react-router-dom';
 import { addToast } from '@heroui/toast';
-import { Search } from '../assets';
 
 const BlocksDashboard = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [statusFilter, setStatusFilter] = useState('all');
-    const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [currentPage, setCurrentPage] = React.useState(1);
     const itemsPerPage = 6;
+    const nav = useNavigate();
     const blocks = UseDashboardStore(e => e.blocks);
     const loaders = UseDashboardStore(e => e.loaders);
+  const getBlocks = UseDashboardStore(e => e.getBlocks);
 
-    const filteredBlocks = blocks.filter(block => {
-        const matchesSearch = block.block.toLowerCase().includes(searchTerm.toLowerCase());
-        let matchesStatus = true;
-        if (statusFilter !== 'all') {
-            matchesStatus = block.states[statusFilter] > 0;
-        }
-        return matchesSearch && matchesStatus;
+    const filteredBlocks = blocks?.filter(block => {
+        const matchesSearch = block?.block?.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesSearch;
     });
 
     const totalPages = Math.ceil(filteredBlocks.length / itemsPerPage);
@@ -32,45 +27,113 @@ const BlocksDashboard = () => {
         currentPage * itemsPerPage
     );
 
+    const allRooms = blocks
+        .flatMap(block => block?.floors || [])
+        .flatMap(floor => floor?.rooms || []);
+
     const states = [
         { key: "total", label: "total", cardName: "Total Blocks", length: blocks.length },
-        { key: "active", label: "active", cardName: "Active rooms", length: blocks.reduce((sum, block) => sum + block.states.active, 0) },
-        { key: "inactive", label: "inactive", cardName: "Inactive rooms", length: blocks.reduce((sum, block) => sum + block.states.inactive, 0) },
-        { key: "maintenance", label: "maintenance", cardName: "Maintenance rooms", length: blocks.reduce((sum, block) => sum + block.states.maintenance, 0) }
+        { key: "active", label: "active", cardName: "Active rooms", length: allRooms.filter(r => r?.state === "active").length },
+        { key: "inactive", label: "inactive", cardName: "Inactive rooms", length: allRooms.filter(r => r?.state === "inactive").length },
+        { key: "maintenance", label: "maintenance", cardName: "Maintenance rooms", length: allRooms.filter(r => r?.state === "maintenance").length },
     ];
 
+    function handleNavigate(id) {
+        nav(`../editBlock/${id}`)
+    };
+
+    function toast(title, description, color) {
+        addToast({
+            title,
+            description,
+            variant: "flat",
+            color
+        })
+    }
+
+    React.useEffect(() => {
+        async function getData() {
+            const response = await getBlocks();
+            if (!response.state) {
+                toast('Some Error Occured', response.message, 'danger');
+                return;
+            }
+            if (response.data) {
+                if (response.data.length === 0) {
+                    toast(
+                        'No Data Found',
+                        'No blocks available. Please refresh the page to try again.',
+                        'warning'
+                    );
+                }
+            }
+        }
+        getData();
+    }, []);
+
     return (
-        <div className="min-h-[calc(100%-90px)] bg-white p-2 pt-5">
+        <div className="h-[calc(100%-240px)] bg-white p-2">
             <div className="max-w-7xl mx-auto h-full">
                 <DisplayHeader
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
-                    handleClick={() => console.log("Click")}
+                    handleClick={() => nav("../addBlock")}
                 />
+
+{!loaders.getLoading && blocks.length == 0 ? 
+                <div className='flex flex-col items-center justify-center h-full'>
+                    <div className='text-center p-8 bg-red-50 border border-red-200 rounded-lg max-w-md'>
+                        <div className='text-red-600 text-xl mb-2'>⚠️</div>
+                        <h3 className='text-lg font-semibold text-red-800 mb-2'>No Data Available</h3>
+                        <p className='text-red-700 mb-4'>
+                            Unable to load dashboard blocks. This might be due to a connection issue or server problem.
+                        </p>
+                        <Button
+                            onPress={() => {
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 300);
+                            }}
+                            radius='md'
+                            color='danger'
+                            className='px-4 py-2 transition-colors'
+                        >
+                            Refresh Page
+                        </Button>
+                    </div>
+                </div>
+                :
+                <div className='h-full'>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                    {states.map(item => (
+                    {states?.map(item => (
                         <StateSummary
                             loading={loaders.getLoading}
                             key={item.key}
                             label={item.label}
                             cardName={item.cardName}
-                            length={blocks.length}
+                            length={item.length}
                         />
                     ))}
                 </div>
-                {!loaders.getLoading && filteredBlocks.length === 0 ? (
+                {!loaders.getLoading && filteredBlocks?.length === 0 ? (
                     <NoSearch />
                 ) : (
-                    <div className='h-[calc(100%-235px)] flex flex-col justify-between'>
+                    <div className='h-full  flex flex-col gap-4 justify-between'>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {loaders.getLoading ?
                                 Array(6).fill(null).map((_, index) => (
                                     <BlockCard key={index} loading={loaders.getLoading} />
                                 ))
                                 :
-                                currentBlocks.map((block, index) => (
-                                    <BlockCard key={index} block={block.block} states={block.states} loading={loaders.getLoading} />
-                                ))}
+                                currentBlocks.map((block, index) => {
+                                    const blockStates = {
+                                        active: block?.floors?.reduce((sum,floor) => sum + floor?.rooms?.reduce((roomSum,room) => roomSum + (room?.state === "active" ? 1 : 0), 0), 0),
+                                        inactive: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "inactive" ? 1 : 0), 0), 0),
+                                        maintenance: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "maintenance" ? 1 : 0), 0), 0),
+                                    };
+                                    return(
+                                    <BlockCard key={index} block={block?.block} states={blockStates} loading={loaders.getLoading} handleClick={() => handleNavigate(block._id)} />
+                                )})}
                         </div>
                         {totalPages > 1 && (
                             <div className="flex justify-center">
@@ -84,9 +147,14 @@ const BlocksDashboard = () => {
                         )}
                     </div>
                 )}
+                </div>
+}
             </div>
+
         </div>
+        
     );
+ 
 };
 
 export default BlocksDashboard;

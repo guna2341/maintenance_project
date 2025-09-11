@@ -8,8 +8,23 @@ export const DashboardLayout = ({ filteredBlock }) => {
     const blocks = UseDashboardStore(e => e.blocks);
     const [height, setHeight] = React.useState(0);
     const [index, setIndex] = React.useState(0);
+
+    const blockStates = {
+        active: blocks[index]?.floors?.reduce(
+            (floorSum, floor) =>
+                floorSum +
+                (floor?.rooms?.reduce(
+                    (roomSum, room) => roomSum + (room?.state === "active" ? 1 : 0),
+                    0
+                ) || 0),
+            0
+        ),
+        inactive: blocks[index]?.floors?.reduce((sum,floor) => sum + floor?.rooms?.reduce((roomSum,item) => roomSum + (item?.state === 'inactive' ? 1 : 0), 0), 0),
+        maintenance: blocks[index]?.floors?.reduce((sum,floor) => sum + floor?.rooms?.reduce((roomSum,item) => roomSum + (item?.state === 'maintenance' ? 1 : 0), 0), 0),
+    };
+
     return (
-        <>
+                <>
             <div className='mt-3 sm:mt-1'>
                 <SwiperComponent
                     loading={loaders.getLoading}
@@ -32,24 +47,30 @@ export const DashboardLayout = ({ filteredBlock }) => {
                             style={{ height: height > 0 ? `${height}px` : 'auto' }}
                         >
                             <div className="flex-1 flex flex-col gap-10 pb-2.5 overflow-y-auto scrollbar-thin scrollbar-thumb-custom-300/10 scrollbar-track-transparent">
-                                {blocks[index]?.floors?.map(item => (
+                                {blocks[index]?.floors?.map(item => {
+                                    const states = {
+                                        active:item?.rooms?.reduce((sum,item) => sum + (item?.state === 'active' ? 1 : 0), 0),
+                                        inactive: item?.rooms?.reduce((sum,item) => sum + (item?.state === 'inactive' ? 1 : 0), 0),
+                                        maintenance: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'maintenance' ? 1 : 0), 0)
+                                    };
+                                    return(
                                     <BlockOverview
                                         loading={loaders.getLoading}
                                         key={item?._id}
                                         blocks={blocks[index]}
                                         block={`${blocks[index]?.block?.toUpperCase()} - ${item?.block}`}
-                                        states={item?.states}
+                                        states={states}
                                         rooms={item?.rooms}
                                         floorId={item?._id}
                                         blockId={blocks[index]?._id}
                                     />
-                                ))}
+                                )})}
                             </div>
                         </div>
 
                         <div className="flex-1.5 w-full sm:max-w-[400px] flex flex-col">
                             <Analytics
-                                states={blocks[index]?.states}
+                                states={blockStates}
                                 block={blocks[index]}
                                 index={index}
                                 onHeightChange={e => setHeight(e)} />
@@ -72,7 +93,7 @@ export const DashboardLayout = ({ filteredBlock }) => {
                                 key={item?._id}
                                 loading={loaders.getLoading}
                                 block={`${blocks[index].block.toUpperCase()} - ${item?.block}`}
-                                states={blocks[index]?.states}
+                                states={blockStates}
                                 rooms={item?.rooms}
                             />
                         ))}

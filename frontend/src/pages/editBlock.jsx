@@ -3,27 +3,77 @@ import { BackArrow, Delete, Edit, Plus } from '../assets';
 import { AccordianComponent, AddFloor, AddRoomModal, AddRooms, InputComponent } from '../components';
 import { Card, CardBody } from '@heroui/card';
 import { Button } from '@heroui/button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { DeleteModal } from '../components/deleteModal';
 import { addToast } from "@heroui/toast";
-import { UseAddBlocksStore, UseDashboardStore } from '../stores';
+import { UseDashboardStore, UseEditBlockStore } from '../stores';
 
-const AddBlockPage = () => {
+const EditBlockPage = () => {
 
   const nav = useNavigate();
-
-  const loaders = UseAddBlocksStore(e => e.loaders);
-
-  const [block, setBlock] = React.useState({ block: "", floors: [] });
+  const blocks = UseDashboardStore(e => e.blocks);
+  const [block, setBlock] = React.useState();
   const [room, setRoom] = React.useState({ roomId: -1, floorId: -1, room: false, roomName: "", issue:"", state: "active" });
   const [floor, setFloor] = React.useState({ id: -1, floor: false, floorName:"" });
   const [deleteModal,setDeleteModal] = React.useState({delete:false,floorId:-1,type:"floor"});
-  const addBlock = UseAddBlocksStore(e => e.addBlocks);
+  const {id} = useParams();
+  const editBlock = UseEditBlockStore(e => e.editBlock);
+  const loading = UseEditBlockStore(e => e.loading);
+  const loaders = UseDashboardStore(e => e.loaders);
   const getBlocks = UseDashboardStore(e => e.getBlocks);
+  const deleteBlock = UseEditBlockStore(e => e.deleteBlock);
+  const deleteLoading = UseEditBlockStore(e => e.deleteLoading);
+  const [deleted,setDeleted] = React.useState(false);
+
+  React.useEffect(() => {
+    const currentBlock = blocks.find(item => item._id === id);
+    setBlock(currentBlock ?? []);
+  },[blocks]);
 
   function handleBack() {
-    nav(-1);
+    nav("../displayBlocks");
   }
+
+    function toast(title, description, color) {
+      addToast({
+        title,
+        description,
+        variant: "flat",
+        color
+      })
+    }
+  
+    React.useEffect(() => {
+      async function getData() {
+        const response = await getBlocks();
+        if (!response.state) {
+          toast('Some Error Occured', response.message, 'danger');
+          return;
+        }
+        if (response.data) {
+          if (response.data.length === 0) {
+            toast(
+              'No Data Found',
+              'No blocks available. Please refresh the page to try again.',
+              'warning'
+            );
+          }
+        }
+      }
+        getData();
+    }, []);
+
+    async function handleDelete() {
+        const response = await deleteBlock(id);
+        if (response.state) {
+          toast("Success",response?.message,"success");
+          setDeleted(true);
+        }
+        else {
+          toast("Error",response?.message,"danger")
+        }
+    }
+
   function handleNewRoom(data) {
     const newBlock = {
       ...block,
@@ -38,7 +88,6 @@ const AddBlockPage = () => {
       })
     };
     setBlock(newBlock);
-    console.log(newBlock)
     setRoom({ room: false, floorId: -1, roomId: -1 });
   }
   function handleEditRoom(data) {
@@ -53,7 +102,7 @@ const AddBlockPage = () => {
                 return {
                   ...item,
                   room: data.room,
-                  state: data?.state || "active",
+                  state: data?.state || "inactive",
                   issue: data?.issue
                 }
               }
@@ -94,7 +143,7 @@ const AddBlockPage = () => {
           }
         }
         else {
-          return floor;
+          return item;
         }
       })
     };
@@ -122,7 +171,6 @@ const AddBlockPage = () => {
     setRoom(p => ({ ...p, room: false, roomId: -1, floorId: -1 }));
   }
   function deleteRooms() {
-    console.log(room)
       const newBlock = {
         ...block,
         floors: block.floors.map((floor,index) => {
@@ -149,12 +197,12 @@ const AddBlockPage = () => {
     setBlock(newBlock);
   }
   async function handleSave() {
-    const response = await addBlock(block);
+    const response = await editBlock(block);
     if (response?.state) {
-      toast("Success",response?.message || "Block added successfully","success")
+      toast("Success",response?.message,"success")
     }
     else {
-      toast("Error",response?.message || "Some error occured","danger")
+      toast("Error",response?.message,"danger")
     }
   }
 
@@ -167,52 +215,108 @@ const AddBlockPage = () => {
     })
   }
 
-    React.useEffect(() => {
-      async function getData() {
-        const response = await getBlocks();
-        if (!response.state) {
-          toast('Some Error Occured', response.message, 'danger');
-          return;
-        }
-        if (response.data) {
-          if (response.data.length === 0) {
-            toast(
-              'No Data Found',
-              'No blocks available. Please refresh the page to try again.',
-              'warning'
-            );
-          }
-        }
-      }
-        getData();
-    }, []);
-
   return (
     <div className='h-full pt-10 p-2 px-12 flex flex-col gap-7 font-poppins'>
       <div className='flex items-center gap-8'>
         <span className='cursor-pointer' onClick={handleBack}>
           <BackArrow />
         </span>
-        <h1 className='text-xl font-poppins font-medium text-center text-custom-300'>Add Block</h1>
+        <h1 className='text-xl font-poppins font-medium text-center text-custom-300'>Edit Block</h1>
       </div>
       <Card className='h-full'>
-        <CardBody
-          className='bg-custom-150/50 h-full'
-        >
-          <div className='p-4 rounded-lg flex flex-col gap-4 h-full'>
+        {loaders.getLoading ?
+        <CardBody>
+            <div className='p-4 rounded-lg flex flex-col gap-4 h-full'>
+
             <div className='flex flex-col gap-2'>
               <div className='flex items-center justify-between w-full'>
                 <p className='text-lg font-medium font-poppins text-custom-300'>Block Name <span className='text-danger'>*</span></p>
-                <Button
+                <div className='flex items-center gap-2'>
+                  <Button color='danger' variant='bordered'>Delete</Button>    
+                  <Button
                   color='primary'
-                  onPress={handleSave}
-                  isLoading={loaders.addLoading}
+                  isLoading={loading}
                 >Save</Button>
+                </div>
               </div>
               <InputComponent
                 isRequired
                 autofocus
-                value={block.block}
+                isReadOnly={loaders.getLoading}
+                value={"loading..."}
+                placeholder={"Eg:CB101"}
+                classname={{
+                  inputWrapper: "bg-white border border-gray-300",
+                }}
+              />
+            </div>
+              <div className='h-full overflow-auto py-2 scrollbar-thin scrollbar-thumb-custom-300/10 scrollbar-track-transparent'>
+                <div className='flex flex-col gap-4'>
+            {Array(3).fill("").map((floor, index) => (
+              <AccordianComponent
+                key={index}
+                loading={loaders.getLoading}
+                index={index}
+                title={
+                  <div className='flex px-4 items-center font-medium font-poppins text-custom-300 gap-2 justify-between cursor-pointer'><div>{floor?.block}</div>
+                    <div></div>
+                    <div className='flex items-center gap-3'>
+                      <span>
+                        <Edit />
+                      </span>
+                      <span>
+                        <Delete />
+                      </span>
+                    </div>
+                  </div>
+                }
+                aria_label={floor?.block}
+                content={
+                  <AddRooms setRoom={setRoom} setDelete={setDeleteModal} floor={floor} floorId={index} loading={loaders.getLoading} />
+                }
+              />
+             
+))}
+</div>
+</div>
+            </div>
+        </CardBody> :
+        <CardBody
+          className='bg-custom-150/50 h-full'
+        >
+            {deleted ? <div className="flex flex-col h-full w-full items-center justify-center bg-gray-100 rounded-lg px-4">
+              <div className="bg-white flex flex-col items-center p-6 rounded-2xl gap-6 border border-gray-200 shadow-sm max-w-sm w-full">
+                <div className="text-xl font-semibold text-danger text-center">
+                  Block Deleted Successfully
+                </div>
+                <Button className="bg-danger text-white px-6 py-2 rounded-lg transition duration-300"
+                onPress={() => nav('../displayBlocks')}
+                >
+                  Go Back
+                </Button>
+              </div>
+            </div>
+:
+          <div className='p-4 rounded-lg flex flex-col gap-4 h-full'>
+            <div className='flex flex-col gap-2'>
+              <div className='flex items-center justify-between w-full'>
+                <p className='text-lg font-medium font-poppins text-custom-300'>Block Name <span className='text-danger'>*</span></p>
+                  <div className='flex items-center gap-2'>
+                    <Button color='danger' variant='bordered'
+                    loading={deleteLoading}
+                    onPress={handleDelete}
+                    >Delete</Button>
+                    <Button
+                      color='primary'
+                      isLoading={loading}
+                      onPress={handleSave}
+                    >Save</Button>
+                  </div>
+              </div>
+              <InputComponent
+                isRequired
+                autofocus
+                value={block?.block}
                 onchange={e => setBlock(p => ({ ...p, block: e.target.value }))}
                 placeholder={"Eg:CB101"}
                 classname={{
@@ -220,7 +324,7 @@ const AddBlockPage = () => {
                 }}
               />
             </div>
-            
+          
             <div className='flex justify-between items-center'>
               <p className='text-lg font-medium font-poppins text-custom-300'>Floors</p>
               <Button
@@ -231,7 +335,7 @@ const AddBlockPage = () => {
                 Add Floor
               </Button>
             </div>
-            {block.floors.length == 0 ?
+            {block?.floors?.length == 0 || blocks.length == 0 ?
               <div className="text-center text-gray-500 border border-black/15 bg-white rounded-lg h-full flex justify-center items-center italic text-xl font-semibold p-4">
                 No Floors Added Yet
               </div>
@@ -267,7 +371,9 @@ const AddBlockPage = () => {
               </div>
             }
           </div>
+}
         </CardBody>
+}
       </Card>
       <AddRoomModal
         isOpen={room.room}
@@ -275,7 +381,7 @@ const AddBlockPage = () => {
         roomIssue={room?.issue}
         roomState={room?.state}
         edit={room.roomId != -1}
-        onClose={() => setRoom(p => ({ ...p, room: false, roomId: -1, floorId: -1, roomName: "", issue:"", state: "active" }))}
+        onClose={() => setRoom(p => ({ ...p, room: false, roomId: -1, floorId: -1, roomName: "", issue:"" }))}
         handleConfirm={handleRoom}
       />
       <AddFloor
@@ -295,5 +401,5 @@ const AddBlockPage = () => {
   );
 };
 
-export default AddBlockPage;
+export default EditBlockPage;
 

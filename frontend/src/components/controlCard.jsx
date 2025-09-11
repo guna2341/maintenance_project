@@ -4,13 +4,16 @@ import React from 'react';
 import { ControlModal } from './controlModal';
 import { Skeleton } from '@heroui/skeleton';
 import { UseDashboardStore } from '../stores';
-
+import { Delete, Edit, Hamburger } from '../assets';
+import { Popover, PopoverTrigger, PopoverContent } from "@heroui/popover";
+import { Listbox, ListboxSection, ListboxItem } from "@heroui/listbox";
 export const ControlCard = (
   {
     state,
     roomName,
     loading,
     handleClick,
+    handleRoom,
     edit
   }
 ) => {
@@ -24,18 +27,17 @@ export const ControlCard = (
     }
   }, [state]);
 
-  function handleSwitch() {
-    if (!loading && state !== "maintenance") {
+  async function handleSwitch() {
+    if (edit) {
+      handleClick();
+      return;
+    }
+    if (!loading && state !== "maintenance" && !edit) {
       setOpen(true);
     };
   }
 
   async function handleClose(e) {
-    if (e == "confirm" && edit) {
-      handleClick(switchState ? "active" : "inactive");
-      setOpen(false);
-      return;
-    }
     if (e === "confirm") {
       try {
         await handleClick(switchState ? "active" : "inactive");
@@ -63,7 +65,8 @@ export const ControlCard = (
         "border-custom-200 cursor-auto": state === "maintenance"
       })}
     >
-
+      <div className='flex items-center  w-full'>
+        <div className='w-full flex justify-center'>
       <div
         className={cn('border border-custom-400 rounded w-fit px-5 text-center items-center font-poppins font-normal text-sm', {
           'border-custom-500 text-custom-500': !switchState,
@@ -76,6 +79,8 @@ export const ControlCard = (
         /> :
           roomName ? roomName : "Room Name"}
       </div>
+        </div>
+       </div>
       <Switch
         color={state === "maintenance" ? "warning" : "success"}
         isDisabled={loading || state === "maintenance"}

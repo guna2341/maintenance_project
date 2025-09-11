@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const blockController = require("../controllers/blockController");
+const { verifyToken } = require('../middlewares/authMiddleware');
+const { authorizeRole } = require('../middlewares/roleMiddleWare');
+
+router.use(verifyToken);
+
+router.use(authorizeRole("admin"));
 
 router.get("/getBlocks", blockController.getBlocks);
 

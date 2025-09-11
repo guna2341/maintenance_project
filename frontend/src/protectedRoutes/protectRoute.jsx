@@ -1,9 +1,10 @@
-import { Outlet, Redirect } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import LoginPage from "../pages/login";
 
 export const ProtectRoute = () => {
   const token = localStorage.getItem('token');
   if (!token) {
-    return <Redirect to="/login" />
+    return <LoginPage/>
   }
   else {
     return <Outlet />

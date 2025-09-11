@@ -8,7 +8,7 @@ export const Edit = (props) => (
         {...props}
     >
         <g
-            stroke="#000"
+            stroke="#006FEE"
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={1.5}

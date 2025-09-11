@@ -3,7 +3,22 @@ import { Popover, PopoverTrigger, PopoverContent } from "@heroui/popover";
 import { Button } from '@heroui/button';
 import { Chip } from '@heroui/chip';
 import { Exit } from '../assets';
+import { UseAuthStore } from '../stores';
+import { useNavigate } from 'react-router-dom';
+
 export const ProfileMenu = ({ children, isOpen, setIsOpen }) => {
+        const email = UseAuthStore(e => e.email);
+        const userName = UseAuthStore(e => e.userName);
+        const role = UseAuthStore(e => e.role);
+        const logout = UseAuthStore(e => e.logout);
+        const nav = useNavigate();
+
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+        function handleLogout() {
+            logout();
+            nav(`/${BASE_URL}/login`);
+        }
     return (
         <div
         >
@@ -27,24 +42,26 @@ export const ProfileMenu = ({ children, isOpen, setIsOpen }) => {
                                     <div
                                         className='rounded-full font-poppins font-normal text-md sm:text-base min-w-[20px] min-h-[20px] sm:min-w-[40px] sm:min-h-[40px] flex items-center justify-center text-white bg-orange-400'
                                     >
-                                        S
+                                        {email[0].toUpperCase()}
                                     </div>
                                 </div>
                             </Chip>
                             <div className='w-full flex flex-col gap-0.5'>
                                 <div className='text-sm font-semibold w-full flex items-center justify-between'>
-                                    Sardar
+                                    {userName}
                                     <span className='font-normal text-xs'>
-                                        Admin
+                                        {role}
                                     </span>
                                 </div>
                                 <div className='text-xs text-black/30 font-medium'>
-                                    Sardar@gmail.com
+                                    {email}
                                 </div>
                             </div>
                         </div>
                         <hr className='text-black/10 w-full mb-1' />
-                        <Button className='px-4 font-semibold bg-transparent justify-start flex gap-5 text-danger hover:bg-custom-900/10 py-2 mb-1 cursor-pointer rounded-md items-center'>
+                        <Button className='px-4 font-semibold bg-transparent justify-start flex gap-5 text-danger hover:bg-custom-900/10 py-2 mb-1 cursor-pointer rounded-md items-center'
+                        onPress={handleLogout}
+                        >
                             <span className='rotate-180 text-danger'>
                                 <Exit />
                             </span>

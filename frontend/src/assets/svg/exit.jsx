@@ -4,8 +4,8 @@ export const Exit = (props) => (
         xmlns="http://www.w3.org/2000/svg"
         stroke="#000"
         strokeWidth={0.112}
-        width={17}
-        height={17}
+        width={props.width ?? 17}
+        height={props.height ?? 17}
         viewBox="0 0 16 16"
         {...props}
     >

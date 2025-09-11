@@ -1,13 +1,26 @@
 import { Button } from '@heroui/button'
 import React from 'react'
 import { InputComponent } from './input'
-import { Search } from '../assets'
+import { BackArrow, Search } from '../assets'
+import { useNavigate } from 'react-router-dom'
 
 export const DisplayHeader = ({searchTerm, setSearchTerm , handleClick}) => {
+
+    const nav = useNavigate();
+    function handleBack() {
+        nav(-1);
+    }
+
+
   return (
       <div>
             <header className="mb-4">
+              <div className='flex items-center gap-4'>
+                  <span className='cursor-pointer' onClick={handleBack}>
+                                          <BackArrow />
+                                        </span>
                               <h1 className="text-3xl font-bold text-gray-900">College Blocks</h1>
+              </div>
                               <p className="text-gray-600 mt-2">Manage and monitor all blocks in the college</p>
                           </header>
           

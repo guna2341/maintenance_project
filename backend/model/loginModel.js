@@ -11,7 +11,12 @@ const loginSchema = new mongoose.Schema({
     trim: true,
     match: [/^\S+@\S+\.\S+$/, "Please use a valid email address"], 
     },
-  password: String
+  password: String,
+  role: {
+    type:String,
+    enum:["admin","user"],
+    default:"user"
+  }
 });
 
 const UserModel = mongoose.model("User", loginSchema);

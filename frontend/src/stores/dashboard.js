@@ -5,9 +5,15 @@ import endpoints from "../api/config/endpoints";
 export const UseDashboardStore = create((set, get) => ({
   blocks: [],
   filteredBlocks: [],
+  menuExpanded:true,
+  fetched:false,
   loaders: {
     getLoading: false,
     editLoading: false,
+  },
+
+  setDashboard: (key,value) => {
+    set({[key]:value})
   },
 
   setFilter: (blocks) => {
@@ -18,12 +24,17 @@ export const UseDashboardStore = create((set, get) => ({
   },
 
   getBlocks: async () => {
+    const state = get();
+    if (state.fetched || state.blocks.length > 0) {
+      return {state:true};
+    }
     try {
       set((state) => ({
         ...state,
         loaders: { ...state.loaders, getLoading: true },
       }));
       const response = await apiClient.get(endpoints.BLOCK.GETBLOCKS);
+      set({fetched: true});
       set((state) => ({
         ...state,
         blocks: response?.data?.blocks,
@@ -36,6 +47,7 @@ export const UseDashboardStore = create((set, get) => ({
       set((state) => ({
         ...state,
         loaders: { ...state.loaders, getLoading: false },
+        fetched: false
       }));
     }
   },
@@ -51,33 +63,11 @@ export const UseDashboardStore = create((set, get) => ({
         if (block._id !== data.blockId) return block;
         return {
           ...block,
-          states: {
-            ...block.states,
-            active:
-              data.state === "active"
-                ? block.states.active - 1
-                : block.states.active + 1,
-            inactive:
-              data.state === "active"
-                ? block.states.inactive + 1
-                : block.states.inactive - 1,
-          },
           floors: block.floors.map((floor) => {
             if (floor._id !== data.floorId) return floor;
 
             return {
-              ...floor,
-              states: {
-                ...floor.states,
-                active:
-                  data.state === "active"
-                    ? floor.states.active - 1
-                    : floor.states.active + 1,
-                inactive:
-                  data.state === "active"
-                    ? floor.states.inactive + 1
-                    : floor.states.inactive - 1,
-              },
+              ...floor, 
               rooms: floor.rooms.map((room) =>
                 room._id === data.roomId
                   ? {
