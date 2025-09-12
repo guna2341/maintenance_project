@@ -3,7 +3,6 @@ const blockModel = require("../model/blockModel");
 const getBlocks = async (req, res) => {
   try {
     const blocks = await blockModel.find();
-   
     setTimeout(() => {
       return res.status(200).json({blocks});
     }, 3000);
@@ -50,7 +49,6 @@ const editBlocks = async (req, res) => {
 
     const { _id, ...updatedData } = data;
 
-    // directly get the updated doc
     const updatedBlock = await blockModel.findByIdAndUpdate(
       _id,
       { $set: updatedData },

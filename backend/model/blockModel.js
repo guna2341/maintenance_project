@@ -6,7 +6,6 @@ const roomSchema = new mongoose.Schema({
   issue: String,
 });
 
-
 const floorSchema = new mongoose.Schema({
   block: String,
   rooms: [roomSchema],
@@ -18,4 +17,5 @@ const BlockSchema = new mongoose.Schema({
 });
 
 const blockModel = mongoose.model("blocks", BlockSchema);
+
 module.exports = blockModel;

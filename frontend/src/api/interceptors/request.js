@@ -1,10 +1,9 @@
 import secureLocalStorage from "react-secure-storage";
 import apiClient from "../config/axios";
-import { UseAuthStore } from "../../stores";
 
 apiClient.interceptors.request.use(
   (config) => {
-  const token = UseAuthStore(e => e.token);
+    const token = secureLocalStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

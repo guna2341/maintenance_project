@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import { MainLayout } from "./layout/mainLayout";
 import { Dashboard } from './pages/dashboard';
 import BlocksDashboard from "./pages/displayBlocks";
-import React from "react";
 import AddBlockPage from "./pages/addBlock";
 import EditBlockPage from "./pages/editBlock";
 import { NotFound } from "./components";
@@ -11,6 +10,9 @@ import './api/interceptors/response.js';
 import LoginPage from "./pages/login.jsx";
 import { ProtectRoute } from "./protectedRoutes/protectRoute.jsx";
 import { Auth } from "./protectedRoutes/auth.jsx";
+
+
+// REMOVE BACKEND DELAY
 
 const App = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -30,7 +32,7 @@ const App = () => {
                 <Route path="*" element={<NotFound />} />
             </Route>
             </Route>
-        </Routes>
+            </Routes>
     );
 }
 

@@ -4,9 +4,9 @@ import { Input } from '@heroui/input';
 import React, { useRef, useState } from 'react';
 import { Form } from "@heroui/form";
 import { CloseEye, OpenEye } from '../assets';
-import { UseAuthStore } from '../stores';
 import { useNavigate } from 'react-router-dom';
 import { addToast } from '@heroui/toast';
+import { UseAuthStore } from '../stores/authStore';
 
 const LoginPage = () => {
 
@@ -68,11 +68,12 @@ const LoginPage = () => {
         e.preventDefault();
         setIsLoading(true);
         const response = await login(formData.email,formData.password);
+        console.log(response);
         if (response?.state) {
             nav(`/${BASE_URL}/dashboard`);
         }
         else {
-            toast("Error",response?.message,"danger");
+            toast("Error",response.message,"danger");
         }
         setIsLoading(false);
     };
