@@ -6,6 +6,7 @@ import { Form } from "@heroui/form";
 import { CloseEye, OpenEye } from '../assets';
 import { UseAuthStore } from '../stores';
 import { useNavigate } from 'react-router-dom';
+import { addToast } from '@heroui/toast';
 
 const LoginPage = () => {
 
@@ -54,12 +55,24 @@ const LoginPage = () => {
         }));
     };
 
+    function toast(title, description, color) {
+        addToast({
+            title,
+            description,
+            variant: "flat",
+            color,
+        })
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         const response = await login(formData.email,formData.password);
         if (response?.state) {
             nav(`/${BASE_URL}/dashboard`);
+        }
+        else {
+            toast("Error",response?.message,"danger");
         }
         setIsLoading(false);
     };

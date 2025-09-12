@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import apiClient from "../api/config/axios";
 import endpoints from "../api/config/endpoints";
+import secureLocalStorage from "react-secure-storage";
 
 export const UseAuthStore = create((set, get) => ({
-  token: localStorage.getItem("token"),
-  email: localStorage.getItem("email"),
-  userName: localStorage.getItem("userName"),
-  role: localStorage.getItem("role"),
+  token: secureLocalStorage.getItem("token"),
+  email: secureLocalStorage.getItem("email"),
+  userName: secureLocalStorage.getItem("userName"),
+  role: secureLocalStorage.getItem("role"),
   setAuthStore: (key, value) => {
     set({ [key]: value });
   },
@@ -18,10 +19,11 @@ export const UseAuthStore = create((set, get) => ({
         password,
       });
       set({ token: response?.data?.token, email: email, userName: response?.data?.userData?.userName, role: response?.data?.userData?.role });
-      localStorage.setItem("token", response?.data?.token);
-      localStorage.setItem("email", email);
-      localStorage.setItem("userName", response?.data?.userData?.userName);
-      localStorage.setItem("role", response?.data?.userData?.role);
+      secureLocalStorage.setItem("token", response?.data?.token);
+      secureLocalStorage.setItem("auth","logged-in");
+      secureLocalStorage.setItem("email", email);
+      secureLocalStorage.setItem("userName", response?.data?.userData?.userName);
+      secureLocalStorage.setItem("role", response?.data?.userData?.role);
       return { state: true, message: "Logged in successfully" };
     } catch (err) {
       return { state: false, message: err?.response?.data?.message };
@@ -29,6 +31,7 @@ export const UseAuthStore = create((set, get) => ({
   },
   logout: () => {
     set({token:null});
-    localStorage.clear();
+    localStorage.removeItem("auth");
+    secureLocalStorage.clear();
   },
 }));

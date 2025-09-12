@@ -1,8 +1,9 @@
+import secureLocalStorage from 'react-secure-storage';
 import { Appbar, SideBar } from '../components'
 import { Outlet, Navigate } from 'react-router-dom'
 
 export const MainLayout = () => {
-  const token = localStorage.getItem('token');
+  const token = secureLocalStorage.getItem('token');
 
   if (!token) {
     return <Navigate to="../login" replace />;

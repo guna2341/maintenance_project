@@ -1,12 +1,14 @@
 import { Outlet } from "react-router-dom";
 import LoginPage from "../pages/login";
+import { UseAuthStore } from "../stores";
 
 export const ProtectRoute = () => {
-  const token = localStorage.getItem('token');
+  const token = UseAuthStore(e => e.token);
+
   if (!token) {
-    return <LoginPage/>
+    return <LoginPage />;
   }
   else {
-    return <Outlet />
+    return <Outlet />;
   }
 }

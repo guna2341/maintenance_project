@@ -35,7 +35,6 @@ export const UseAddBlocksStore = create((set, get) => ({
        }));
       return { state: true, message: response?.data?.message };
     } catch (err) {
-      // stop loader on error
       set((prev) => ({
         ...prev,
         loaders: {

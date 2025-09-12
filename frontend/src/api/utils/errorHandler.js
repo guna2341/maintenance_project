@@ -1,4 +1,5 @@
 import { addToast } from "@heroui/toast";
+import secureLocalStorage from "react-secure-storage";
 
 const handleApiError = (error) => {
   if (error.response) {
@@ -14,7 +15,8 @@ const handleApiError = (error) => {
         }
         
         handleToast();
-        localStorage.clear();
+        secureLocalStorage.removeItem("auth");
+        secureLocalStorage.clear();
         setTimeout(() => {
           window.location.href = "/login";
         }, 1500);
