@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const blockModel = require("../model/blockModel");
+const { publishMessage } = require("../services/mqtt");
 
 const switchStatus = async (req, res) => {
   try {
@@ -8,6 +9,10 @@ const switchStatus = async (req, res) => {
     if (!blockId || !floorId || !roomId || !status) {
       return res.status(400).json({ message: "Missing required fields" });
     }
+
+    const topic = `AcerDevices/${blockId}/${floorId}/${roomId}`;
+
+    publishMessage(topic , status);
 
     const updated = await blockModel.findOneAndUpdate(
       { _id: blockId },

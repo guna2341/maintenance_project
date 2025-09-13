@@ -9,6 +9,7 @@ const endpoints = {
     EDITBLOCKS: `${BLOCK_API}/editBlocks`,
     DELETEBLOCKS: `${BLOCK_API}/deleteBlocks`,
   },
+  SWITCHSTATUS: `switchStatus`
 };
 
 export default endpoints;

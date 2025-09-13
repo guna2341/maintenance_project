@@ -1,4 +1,6 @@
 const mqtt = require("mqtt");
+const blockModel = require("../model/blockModel");
+const { default: mongoose } = require("mongoose");
 
 let client;
 
@@ -9,7 +11,7 @@ const connectMqtt = async () => {
 
   client.on("connect", () => {
     console.log("✅ Connected to MQTT broker");
-    client.subscribe("AcerDevices/+/+/+/status", (err) => {
+    client.subscribe("AcerDevices/+/+/+", (err) => {
       if (!err) {
         console.log("Subscribed to device topics")
       };
@@ -27,6 +29,21 @@ const connectMqtt = async () => {
       const floorId = parts[2];
       const roomId = parts[3];
       const state = message.toString();
+      const updated = await blockModel.findOneAndUpdate(
+            { _id: blockId },
+            {
+              $set: {
+                "floors.$[floor].rooms.$[room].state": state,
+              },
+            },
+            {
+              new: true,
+              arrayFilters: [
+                { "floor._id": new mongoose.Types.ObjectId(floorId) },
+                { "room._id": new mongoose.Types.ObjectId(roomId) },
+              ],
+            }
+          );
       console.log(`Updated Block with ${blockId} and updated Floor with ${floorId} updated room ${roomId} with state: ${state}`);
     } catch (err) {
       console.error("❌ Error updating room:", err);

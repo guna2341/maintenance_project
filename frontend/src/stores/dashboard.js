@@ -59,31 +59,37 @@ export const UseDashboardStore = create((set, get) => ({
           loaders: { ...state.loaders, editLoading: true },
         }));
       const state = get();
-      const block = state.blocks.map((block) => {
-        if (block._id !== data.blockId) return block;
-        return {
-          ...block,
-          floors: block.floors.map((floor) => {
-            if (floor._id !== data.floorId) return floor;
+     let roomState;
+     const block = state.blocks.map((block) => {
+       if (block._id !== data.blockId) return block;
 
-            return {
-              ...floor, 
-              rooms: floor.rooms.map((room) =>
-                room._id === data.roomId
-                  ? {
-                      ...room,
-                      state: room.state === "active" ? "inactive" : "active",
-                    }
-                  : room
-              ),
-            };
-          }),
-        };
-      });
-      const newBlock = block.find((block) => block._id === data.blockId);
-      const response = await apiClient.patch(endpoints.BLOCK.EDITBLOCKS, {
-        data: newBlock,
-        id: data.blockId,
+       return {
+         ...block,
+         floors: block.floors.map((floor) => {
+           if (floor._id !== data.floorId) return floor;
+
+           return {
+             ...floor,
+             rooms: floor.rooms.map((room) => {
+               if (room._id === data.roomId) {
+                 roomState = room.state === "active" ? "inactive" : "active";
+                 return {
+                   ...room,
+                   state: roomState,
+                 };
+               }
+               return room;
+             }),
+           };
+         }),
+       };
+     });
+
+      const response = await apiClient.post(endpoints.SWITCHSTATUS, {
+        blockId: data.blockId,
+        floorId: data.floorId,
+        roomId: data.roomId,
+        status:roomState
       });
       const updatedBlocks = state.blocks.map((item) => {
           if (String(item._id) === String(response.data.data._id)) {
