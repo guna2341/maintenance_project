@@ -45,6 +45,7 @@ const connectMqtt = async () => {
             }
           );
       console.log(`Updated Block with ${blockId} and updated Floor with ${floorId} updated room ${roomId} with state: ${state}`);
+      console.log();
     } catch (err) {
       console.error("❌ Error updating room:", err);
     }

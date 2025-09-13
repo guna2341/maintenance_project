@@ -27,6 +27,7 @@ export const DashboardLayout = ({ filteredBlock }) => {
                 <>
             <div className='mt-3 sm:mt-1'>
                 <SwiperComponent
+                    key={index}
                     loading={loaders.getLoading}
                     blocks={filteredBlock}
                     onClick={e => setIndex(e)}
@@ -35,6 +36,7 @@ export const DashboardLayout = ({ filteredBlock }) => {
             {
                 loaders.getLoading ?
                     <BlockLoading
+                        key={index}
                         height={height}
                         blocks={blocks}
                         index={index}
@@ -70,6 +72,7 @@ export const DashboardLayout = ({ filteredBlock }) => {
 
                         <div className="flex-1.5 w-full sm:max-w-[400px] flex flex-col">
                             <Analytics
+                                key={index}
                                 states={blockStates}
                                 block={blocks[index]}
                                 index={index}
@@ -84,6 +87,7 @@ export const DashboardLayout = ({ filteredBlock }) => {
                     <div className="flex-1 flex flex-col gap-10 pb-1 overflow-y-auto scrollbar-thin scrollbar-thumb-custom-300/10 scrollbar-track-transparent">
                         <div className="flex-1.5 w-full sm:max-w-[400px] flex flex-col">
                             <Analytics
+                                key={index}
                                 states={blocks[index]?.states}
                                 block={blocks[index]}
                                 onHeightChange={e => setHeight(e)} />

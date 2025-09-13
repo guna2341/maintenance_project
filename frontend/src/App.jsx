@@ -10,12 +10,20 @@ import './api/interceptors/response.js';
 import LoginPage from "./pages/login.jsx";
 import { ProtectRoute } from "./protectedRoutes/protectRoute.jsx";
 import { Auth } from "./protectedRoutes/auth.jsx";
+import React from "react";
+import mqtt from "mqtt";
+import { mqttConnect } from "./services/mqttConnect.js";
 
 
 // REMOVE BACKEND DELAY
 
 const App = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+    React.useEffect(() => {
+       mqttConnect();
+    }, []);
+
 
     return (
         <Routes>

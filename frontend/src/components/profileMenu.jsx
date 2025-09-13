@@ -49,8 +49,8 @@ export const ProfileMenu = ({ children, isOpen, setIsOpen }) => {
                             <div className='w-full flex flex-col gap-0.5'>
                                 <div className='text-sm font-semibold w-full flex items-center justify-between'>
                                     {userName}
-                                    <span className='font-normal text-xs'>
-                                        {role}
+                                    <span className='font-medium font-poppins text-xs'>
+                                        {role[0].toUpperCase() + role.substr(1,role.length)} 
                                     </span>
                                 </div>
                                 <div className='text-xs text-black/30 font-medium'>
