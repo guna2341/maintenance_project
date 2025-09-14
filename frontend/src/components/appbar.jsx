@@ -1,9 +1,9 @@
 import React from 'react';
-import { DownArrow, Logo } from '../assets';
-import { Chip } from '@heroui/chip';
-import { ProfileMenu } from './profileMenu';
 import { cn } from '@heroui/theme';
+import { Chip } from '@heroui/chip';
 import { UseAuthStore } from "../stores";
+import { DownArrow, Logo } from '../assets';
+import { ProfileMenu } from './profileMenu';
 
 export const Appbar = () => {
     const [menu, setMenu] = React.useState(false);
@@ -13,7 +13,7 @@ export const Appbar = () => {
             className='max-h-[80px] flex items-center justify-between bg-custom-100 p-8 border-b border-custom-1000/50'
         >
             <div className='flex items-center gap-2 sm:gap-4 h-full'>
-           
+
                 <div className='font-medium h-full text-md sm:text-xl flex font-poppins items-center gap-1.5'>
                     <div className='h-fit'>
                         <Logo />
@@ -31,30 +31,29 @@ export const Appbar = () => {
                 setIsOpen={(open) => setMenu(open)}
             >
                 <div className='flex items-center'
-                > 
-                <Chip
-                        className={cn('bg-white cursor-pointer py-[5px] hover:shadow transition-all px-0 !h-fit border border-black/10 items-center', {
-                            'shadow' : menu
-                        })}
                 >
-                    <div className='flex items-center gap-4'>
-                        <div
-                            className='rounded-full font-poppins font-normal text-md sm:text-base min-w-[20px] min-h-[20px] sm:min-w-[25px] sm:min-h-[25px] flex items-center justify-center text-white bg-orange-400'
-                        >
-                            {email[0].toUpperCase()}
+                    <Chip
+                        className={cn('bg-white cursor-pointer py-[5px] hover:shadow transition-all px-0 !h-fit border border-black/10 items-center', {
+                            'shadow': menu
+                        })}
+                    >
+                        <div className='flex items-center gap-4'>
+                            <div
+                                className='rounded-full font-poppins font-normal text-md sm:text-base min-w-[20px] min-h-[20px] sm:min-w-[25px] sm:min-h-[25px] flex items-center justify-center text-white bg-orange-400'
+                            >
+                                {email[0].toUpperCase()}
                             </div>
-                            <span className={cn('transition-all',{
+                            <span className={cn('transition-all', {
                                 'rotate-180': menu,
                                 'rotate-0': !menu
                             })}>
                                 <DownArrow />
                             </span>
-                    </div>
-                </Chip>
+                        </div>
+                    </Chip>
                 </div>
             </ProfileMenu>
         </div>
     )
 }
 
-                    

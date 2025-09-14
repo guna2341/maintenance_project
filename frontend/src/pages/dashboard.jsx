@@ -1,19 +1,20 @@
-import React, { useRef } from 'react';
-import { DashboardHeader, SearchNotFound } from '../components';
+import React from 'react';
+import { Button } from '@heroui/button';
+import { addToast } from '@heroui/toast';
 import { UseDashboardStore } from '../stores';
 import { DashboardLayout } from '../layout/dashboardLayout';
-import { Button } from '@heroui/button';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { addToast } from '@heroui/toast';
+import { DashboardHeader, SearchNotFound } from '../components';
 
 
 export const Dashboard = () => {
+
   const blocks = UseDashboardStore(e => e.blocks);
-  const filteredBlocks = UseDashboardStore(e => e.filteredBlocks);
-  const setFilter = UseDashboardStore(e => e.setFilter);
-  const [search, setSearch] = React.useState('');
   const loaders = UseDashboardStore(e => e.loaders);
+  const setFilter = UseDashboardStore(e => e.setFilter);
   const getBlocks = UseDashboardStore(e => e.getBlocks);
+  const filteredBlocks = UseDashboardStore(e => e.filteredBlocks);
+
+  const [search, setSearch] = React.useState('');
 
   function toast(title, description, color) {
     addToast({
@@ -41,7 +42,7 @@ export const Dashboard = () => {
         }
       }
     }
-      getData();
+    getData();
   }, []);
 
   React.useEffect(() => {
@@ -66,7 +67,7 @@ export const Dashboard = () => {
               <div className='text-red-600 text-xl mb-2'>⚠️</div>
               <h3 className='text-lg font-semibold text-red-800 mb-2'>No Data Available</h3>
               <p className='text-red-700 mb-4'>
-                Unable to load dashboard blocks. This might be due to a connection issue or server problem.
+                Unable to load dashboard blocks. This might be due to a connection issue or there are no blocks.
               </p>
               <Button
                 onPress={() => {

@@ -1,7 +1,7 @@
 import { addToast } from "@heroui/toast";
 import secureLocalStorage from "react-secure-storage";
 
-const handleApiError = (error) => {
+export const handleApiError = (error) => {
   if (error.response) {
     const { status, data } = error.response;
     switch (status) {
@@ -57,4 +57,3 @@ const handleApiError = (error) => {
   }
 };
 
-export default handleApiError;

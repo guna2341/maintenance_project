@@ -11,7 +11,7 @@ const connectMqtt = async () => {
 
   client.on("connect", () => {
     console.log("✅ Connected to MQTT broker");
-    client.subscribe("AcerDevices/+/+/+", (err) => {
+    client.subscribe(`${process.env.MQTT_CLIENT}/+/+/+`, (err) => {
       if (!err) {
         console.log("Subscribed to device topics")
       };
@@ -22,13 +22,13 @@ const connectMqtt = async () => {
     console.log();
     console.log("Received Message:");
     console.log(`${topic}: ${message.toString()}`);
-
+    const msg = JSON.parse(message);
     try {
       const parts = topic.split("/");
       const blockId = parts[1];
       const floorId = parts[2];
       const roomId = parts[3];
-      const state = message.toString();
+      const state = msg.status == "ON" ? "active" : "inactive";
       const updated = await blockModel.findOneAndUpdate(
             { _id: blockId },
             {
@@ -58,7 +58,7 @@ const publishMessage = (topic, message) => {
   console.log(topic, message);
   if (client) {
     client.publish(topic, message);
-  }
+  };
 };
 
 module.exports = { connectMqtt, publishMessage };

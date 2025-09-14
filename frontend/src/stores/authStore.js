@@ -18,11 +18,19 @@ export const UseAuthStore = create((set, get) => ({
         email,
         password,
       });
-      set({ token: response?.data?.token, email: email, userName: response?.data?.userData?.userName, role: response?.data?.userData?.role });
+      set({
+        token: response?.data?.token,
+        email: email,
+        userName: response?.data?.userData?.userName,
+        role: response?.data?.userData?.role,
+      });
       secureLocalStorage.setItem("token", response?.data?.token);
-      localStorage.setItem("auth","logged-in");
+      localStorage.setItem("auth", "logged-in");
       secureLocalStorage.setItem("email", email);
-      secureLocalStorage.setItem("userName", response?.data?.userData?.userName);
+      secureLocalStorage.setItem(
+        "userName",
+        response?.data?.userData?.userName
+      );
       secureLocalStorage.setItem("role", response?.data?.userData?.role);
       return { state: true, message: "Logged in successfully" };
     } catch (err) {
@@ -30,7 +38,7 @@ export const UseAuthStore = create((set, get) => ({
     }
   },
   logout: () => {
-    set({token:null});
+    set({ token: null });
     localStorage.removeItem("auth");
     secureLocalStorage.clear();
   },

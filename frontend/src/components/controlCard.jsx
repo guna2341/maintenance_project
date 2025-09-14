@@ -3,29 +3,32 @@ import { cn } from '@heroui/theme';
 import React from 'react';
 import { ControlModal } from './controlModal';
 import { Skeleton } from '@heroui/skeleton';
-import { UseDashboardStore } from '../stores';
-import { Delete, Edit, Hamburger } from '../assets';
-import { Popover, PopoverTrigger, PopoverContent } from "@heroui/popover";
-import { Listbox, ListboxSection, ListboxItem } from "@heroui/listbox";
-export const ControlCard = (
-  {
-    state,
-    roomName,
-    loading,
-    handleClick,
-    handleRoom,
-    edit
-  }
-) => {
+import { UseDashboardStore, UseSwitchStore } from '../stores';
+
+export const ControlCard = ({
+  state,
+  roomName,
+  loading,
+  handleClick,
+  edit
+}) => {
   const [switchState, setSwitchState] = React.useState(state === "active" ? true : false);
   const [open, setOpen] = React.useState(false);
+
   const loaders = UseDashboardStore(e => e.loaders);
+  const sl = UseSwitchStore(e => e.loading);
 
   React.useEffect(() => {
-    if (!loaders.editLoading) {
+    if (!sl) {
       setSwitchState(state === "active");
     }
-  }, [state]);
+  }, [state, sl]);
+
+  React.useEffect(() => {
+    if (!sl) {
+        setOpen(false);
+    };
+  }, [sl]);
 
   async function handleSwitch() {
     if (edit) {
@@ -34,27 +37,21 @@ export const ControlCard = (
     }
     if (!loading && state !== "maintenance" && !edit) {
       setOpen(true);
-    };
+    }
   }
 
   async function handleClose(e) {
     if (e === "confirm") {
       try {
         await handleClick(switchState ? "active" : "inactive");
-      if (!loaders.editLoading) {
-        setOpen(false);
-        }
-      }
-      catch (err) {
+      } catch (err) {
         console.log(err);
+        setOpen(false);
       }
-    }
-    else {
+    } else {
       setOpen(false);
     }
-  };
-
-
+  }
 
   return (
     <div
@@ -65,28 +62,30 @@ export const ControlCard = (
         "border-custom-200 cursor-auto": state === "maintenance"
       })}
     >
-      <div className='flex items-center  w-full'>
+      <div className='flex items-center w-full'>
         <div className='w-full flex justify-center'>
-      <div
-        className={cn('border border-custom-400 rounded w-fit px-5 text-center items-center font-poppins font-normal text-sm', {
-          'border-custom-500 text-custom-500': !switchState,
-          'border-custom-400 text-custom-400': switchState,
-          "border-custom-200 text-custom-200": state === "maintenance"
-        })}
-      > 
-        {loading ? <Skeleton
-          className='w-12 h-4 my-1 rounded-2xl'
-        /> :
-          roomName ? roomName : "Room Name"}
-      </div>
+          <div
+            className={cn('border border-custom-400 rounded w-fit px-5 text-center items-center font-poppins font-normal text-sm', {
+              'border-custom-500 text-custom-500': !switchState,
+              'border-custom-400 text-custom-400': switchState,
+              "border-custom-200 text-custom-200": state === "maintenance"
+            })}
+          >
+            {loading ? (
+              <Skeleton className='w-12 h-4 my-1 rounded-2xl' />
+            ) : (
+              roomName ? roomName : "Room Name"
+            )}
+          </div>
         </div>
-       </div>
+      </div>
+
       <Switch
         color={state === "maintenance" ? "warning" : "success"}
         isDisabled={loading || state === "maintenance"}
         isSelected={switchState}
         onChange={handleSwitch}
-         classNames={{
+        classNames={{
           wrapper: `w-[60px] h-[28px] bg-custom-500 group-data-[selected=true]:text-custom-400 group-data-[focus-visible=true]:ring-0 group-data-[focus-visible=true]:border-0 ${state === "maintenance" && "bg-warning"}`,
           thumb: "group-data-[selected]:group-data-[pressed=true]:ml-7.5 group-data-[pressed=true]:w-5.5 w-5 h-5 group-data-[selected=true]:ms-8",
           startContent: "start-2.5 font-poppins font-normal text-white text-sm",
@@ -96,13 +95,14 @@ export const ControlCard = (
         size="lg"
         startContent={<span>ON</span>}
       />
+
       <ControlModal
         isOpen={open}
         onClose={handleClose}
-        loading={loaders.editLoading}
+        loading={sl}
         roomName={roomName}
         action={!switchState ? "on" : "off"}
       />
     </div>
-  )
-}
+  );
+};

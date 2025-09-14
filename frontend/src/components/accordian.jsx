@@ -1,5 +1,5 @@
-import { Accordion, AccordionItem } from '@heroui/accordion'
-import { Skeleton } from '@heroui/skeleton'
+import { Skeleton } from '@heroui/skeleton';
+import { Accordion, AccordionItem } from '@heroui/accordion';
 
 export const AccordianComponent = (
     {
@@ -16,10 +16,10 @@ export const AccordianComponent = (
                 key={index}
                 aria-label={aria_label}
                 title={
-                   loading ? <div>
-                    <Skeleton className='w-1/3 h-[28px] rounded-md' />
-                   </div> : title
-            }
+                    loading ? <div>
+                        <Skeleton className='w-1/3 h-[28px] rounded-md' />
+                    </div> : title
+                }
                 classNames={{
                     trigger: "data-[focus-visible=true]:ring-0 data-[focus-visible=true]:outline-0 border-0"
                 }}

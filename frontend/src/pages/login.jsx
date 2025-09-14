@@ -1,39 +1,38 @@
-import { Button } from '@heroui/button';
-import { Card, CardBody, CardHeader } from '@heroui/card';
-import { Input } from '@heroui/input';
-import React, { useRef, useState } from 'react';
 import { Form } from "@heroui/form";
+import { Input } from '@heroui/input';
+import { Button } from '@heroui/button';
+import { addToast } from '@heroui/toast';
 import { CloseEye, OpenEye } from '../assets';
 import { useNavigate } from 'react-router-dom';
-import { addToast } from '@heroui/toast';
+import React, { useRef, useState } from 'react';
 import { UseAuthStore } from '../stores/authStore';
+import { Card, CardBody, CardHeader } from '@heroui/card';
 
-const LoginPage = () => {
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-      const nav = useNavigate();
-      const token = UseAuthStore(e => e.token);
-    const BASE_URL = import.meta.env.VITE_BASE_URL;
-      React.useEffect(() => {
+export const LoginPage = () => {
+
+    const ref = useRef();
+
+    const nav = useNavigate();
+
+    const token = UseAuthStore(e => e.token);
+    const login = UseAuthStore(e => e.login);
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [formData, setFormData] = useState({ email: '', password: '' });
+    const [isFocused, setIsFocused] = useState({ email: false, password: false });
+
+    React.useEffect(() => {
         if (token) {
-          nav(`/${BASE_URL}/dashboard`);
+            nav(`/${BASE_URL}/dashboard`);
         }
         else {
             nav(`/${BASE_URL}/login`)
         }
-      },[]);
+    }, []);
 
-    const login = UseAuthStore(e => e.login);
-    const [showPassword, setShowPassword] = useState(false);
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
-    const [isLoading, setIsLoading] = useState(false);
-    const [isFocused, setIsFocused] = useState({
-        email: false,
-        password: false
-    });
-    const ref = useRef();
     const handleInputChange = (field, value) => {
         setFormData(prev => ({
             ...prev,
@@ -67,13 +66,13 @@ const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        const response = await login(formData.email,formData.password);
+        const response = await login(formData.email, formData.password);
         console.log(response);
         if (response?.state) {
             nav(`/${BASE_URL}/dashboard`);
         }
         else {
-            toast("Error",response.message,"danger");
+            toast("Error", response.message, "danger");
         }
         setIsLoading(false);
     };
@@ -193,4 +192,3 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;

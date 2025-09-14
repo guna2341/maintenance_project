@@ -1,8 +1,8 @@
-import { Button } from '@heroui/button'
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/modal'
-import React from 'react'
-import { InputComponent } from './input';
+import React from 'react';
 import { Form } from '@heroui/form';
+import { Button } from '@heroui/button';
+import { InputComponent } from './input';
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/modal';
 
 export const AddFloor = ({
     edit,

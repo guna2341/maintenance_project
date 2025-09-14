@@ -10,9 +10,14 @@ const switchStatus = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    const topic = `AcerDevices/${blockId}/${floorId}/${roomId}`;
+    const topic = `acer_devices/${blockId}/${floorId}/${roomId}`;
+   const payload = JSON.stringify({
+     deviceId: `${blockId}/${floorId}/${roomId}`,
+     command: status === "active" ? "ON" : "OFF",
+   });
 
-    publishMessage(topic , status);
+
+    publishMessage(topic , payload);
 
     const updated = await blockModel.findOneAndUpdate(
       { _id: blockId },
