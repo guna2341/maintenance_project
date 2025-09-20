@@ -24,3 +24,5 @@ export { AddFloor } from './addFloor';
 export { AddRooms } from './addRooms';
 export { SideBar } from './sidebar';
 export { NotFound } from './noRoutes';
+export { BlockDeleteModal } from './blockDeleteModal';
+export { DeleteModal } from './deleteModal';

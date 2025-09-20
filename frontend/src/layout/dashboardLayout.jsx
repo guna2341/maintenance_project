@@ -1,13 +1,15 @@
-import React from 'react'
-import { Analytics, BlockLoading, BlockOverview } from '../components'
-import { SwiperComponent } from '../components/swiper';
+import React from 'react';
 import { UseDashboardStore } from '../stores';
+import { SwiperComponent } from '../components/swiper';
+import { Analytics, BlockLoading, BlockOverview } from '../components'
 
 export const DashboardLayout = ({ filteredBlock }) => {
-    const loaders = UseDashboardStore(e => e.loaders);
+
     const blocks = UseDashboardStore(e => e.blocks);
-    const [height, setHeight] = React.useState(0);
+    const loaders = UseDashboardStore(e => e.loaders);
+
     const [index, setIndex] = React.useState(0);
+    const [height, setHeight] = React.useState(0);
 
     const blockStates = {
         active: blocks[index]?.floors?.reduce(
@@ -19,15 +21,14 @@ export const DashboardLayout = ({ filteredBlock }) => {
                 ) || 0),
             0
         ),
-        inactive: blocks[index]?.floors?.reduce((sum,floor) => sum + floor?.rooms?.reduce((roomSum,item) => roomSum + (item?.state === 'inactive' ? 1 : 0), 0), 0),
-        maintenance: blocks[index]?.floors?.reduce((sum,floor) => sum + floor?.rooms?.reduce((roomSum,item) => roomSum + (item?.state === 'maintenance' ? 1 : 0), 0), 0),
+        inactive: blocks[index]?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, item) => roomSum + (item?.state === 'inactive' ? 1 : 0), 0), 0),
+        maintenance: blocks[index]?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, item) => roomSum + (item?.state === 'maintenance' ? 1 : 0), 0), 0),
     };
 
     return (
-                <>
+        <>
             <div className='mt-3 sm:mt-1'>
                 <SwiperComponent
-                    key={index}
                     loading={loaders.getLoading}
                     blocks={filteredBlock}
                     onClick={e => setIndex(e)}
@@ -51,22 +52,23 @@ export const DashboardLayout = ({ filteredBlock }) => {
                             <div className="flex-1 flex flex-col gap-10 pb-2.5 overflow-y-auto scrollbar-thin scrollbar-thumb-custom-300/10 scrollbar-track-transparent">
                                 {blocks[index]?.floors?.map(item => {
                                     const states = {
-                                        active:item?.rooms?.reduce((sum,item) => sum + (item?.state === 'active' ? 1 : 0), 0),
-                                        inactive: item?.rooms?.reduce((sum,item) => sum + (item?.state === 'inactive' ? 1 : 0), 0),
+                                        active: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'active' ? 1 : 0), 0),
+                                        inactive: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'inactive' ? 1 : 0), 0),
                                         maintenance: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'maintenance' ? 1 : 0), 0)
                                     };
-                                    return(
-                                    <BlockOverview
-                                        loading={loaders.getLoading}
-                                        key={item?._id}
-                                        blocks={blocks[index]}
-                                        block={`${blocks[index]?.block?.toUpperCase()} - ${item?.block}`}
-                                        states={states}
-                                        rooms={item?.rooms}
-                                        floorId={item?._id}
-                                        blockId={blocks[index]?._id}
-                                    />
-                                )})}
+                                    return (
+                                        <BlockOverview
+                                            loading={loaders.getLoading}
+                                            key={item?._id}
+                                            blocks={blocks[index]}
+                                            block={`${blocks[index]?.block?.toUpperCase()} - ${item?.block}`}
+                                            states={states}
+                                            rooms={item?.rooms}
+                                            floorId={item?.floorId}
+                                            blockId={blocks[index]?.blockId}
+                                        />
+                                    )
+                                })}
                             </div>
                         </div>
 

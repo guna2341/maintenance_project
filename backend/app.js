@@ -24,7 +24,9 @@ const port = process.env.PORT;
 
 // services
 const { connectMqtt, publishMessage } = require("./services/mqtt");
+const { mockIOT } = require("./services/mockIot");
 connectMqtt();
+mockIOT();
 
 // database
 const database = require("./config/db");

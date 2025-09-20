@@ -1,20 +1,24 @@
 import React from 'react';
-import { Card, CardBody } from '@heroui/card';
-import { BlockCard, StateSummary, DisplayHeader } from "../components";
 import { Button } from '@heroui/button';
-import { Pagination } from "@heroui/pagination";
-import { UseDashboardStore, UseEditBlockStore } from '../stores';
-import { useNavigate } from 'react-router-dom';
 import { addToast } from '@heroui/toast';
+import { Card, CardBody } from '@heroui/card';
+import { useNavigate } from 'react-router-dom';
+import { Pagination } from "@heroui/pagination";
+import { UseDashboardStore } from '../stores';
+import { BlockCard, StateSummary, DisplayHeader } from "../components";
 
-const BlocksDashboard = () => {
-    const [searchTerm, setSearchTerm] = React.useState('');
-    const [currentPage, setCurrentPage] = React.useState(1);
-    const itemsPerPage = 6;
+export const BlocksDashboard = () => {
+
     const nav = useNavigate();
+
     const blocks = UseDashboardStore(e => e.blocks);
     const loaders = UseDashboardStore(e => e.loaders);
-  const getBlocks = UseDashboardStore(e => e.getBlocks);
+    const getBlocks = UseDashboardStore(e => e.getBlocks);
+
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [currentPage, setCurrentPage] = React.useState(1);
+
+    const itemsPerPage = 6;
 
     const filteredBlocks = blocks?.filter(block => {
         const matchesSearch = block?.block?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -80,84 +84,83 @@ const BlocksDashboard = () => {
                     handleClick={() => nav("../addBlock")}
                 />
 
-{!loaders.getLoading && blocks.length == 0 ? 
-                <div className='flex flex-col items-center justify-center h-full'>
-                    <div className='text-center p-8 bg-red-50 border border-red-200 rounded-lg max-w-md'>
-                        <div className='text-red-600 text-xl mb-2'>⚠️</div>
-                        <h3 className='text-lg font-semibold text-red-800 mb-2'>No Data Available</h3>
-                        <p className='text-red-700 mb-4'>
-                            Unable to load dashboard blocks. This might be due to a connection issue or server problem.
-                        </p>
-                        <Button
-                            onPress={() => {
-                                setTimeout(() => {
-                                    window.location.reload();
-                                }, 300);
-                            }}
-                            radius='md'
-                            color='danger'
-                            className='px-4 py-2 transition-colors'
-                        >
-                            Refresh Page
-                        </Button>
-                    </div>
-                </div>
-                :
-                <div className='h-full'>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                    {states?.map(item => (
-                        <StateSummary
-                            loading={loaders.getLoading}
-                            key={item.key}
-                            label={item.label}
-                            cardName={item.cardName}
-                            length={item.length}
-                        />
-                    ))}
-                </div>
-                {!loaders.getLoading && filteredBlocks?.length === 0 ? (
-                    <NoSearch />
-                ) : (
-                    <div className='h-full  flex flex-col gap-4 justify-between'>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {loaders.getLoading ?
-                                Array(6).fill(null).map((_, index) => (
-                                    <BlockCard key={index} loading={loaders.getLoading} />
-                                ))
-                                :
-                                currentBlocks.map((block, index) => {
-                                    const blockStates = {
-                                        active: block?.floors?.reduce((sum,floor) => sum + floor?.rooms?.reduce((roomSum,room) => roomSum + (room?.state === "active" ? 1 : 0), 0), 0),
-                                        inactive: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "inactive" ? 1 : 0), 0), 0),
-                                        maintenance: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "maintenance" ? 1 : 0), 0), 0),
-                                    };
-                                    return(
-                                    <BlockCard key={index} block={block?.block} states={blockStates} loading={loaders.getLoading} handleClick={() => handleNavigate(block._id)} />
-                                )})}
+                {!loaders.getLoading && blocks.length == 0 ?
+                    <div className='flex flex-col items-center justify-center h-full'>
+                        <div className='text-center p-8 bg-red-50 border border-red-200 rounded-lg max-w-md'>
+                            <div className='text-red-600 text-xl mb-2'>⚠️</div>
+                            <h3 className='text-lg font-semibold text-red-800 mb-2'>No Data Available</h3>
+                            <p className='text-red-700 mb-4'>
+                                Unable to load dashboard blocks. This might be due to a connection issue or no blocks added.
+                            </p>
+                            <Button
+                                onPress={() => {
+                                    setTimeout(() => {
+                                        window.location.reload();
+                                    }, 300);
+                                }}
+                                radius='md'
+                                color='danger'
+                                className='px-4 py-2 transition-colors'
+                            >
+                                Refresh Page
+                            </Button>
                         </div>
-                        {totalPages > 1 && (
-                            <div className="flex justify-center">
-                                <Pagination
-                                    total={totalPages}
-                                    page={currentPage}
-                                    onChange={setCurrentPage}
-                                    color="primary"
+                    </div>
+                    :
+                    <div className='h-full'>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            {states?.map(item => (
+                                <StateSummary
+                                    loading={loaders.getLoading}
+                                    key={item.key}
+                                    label={item.label}
+                                    cardName={item.cardName}
+                                    length={item.length}
                                 />
+                            ))}
+                        </div>
+                        {!loaders.getLoading && filteredBlocks?.length === 0 ? (
+                            <NoSearch />
+                        ) : (
+                            <div className='h-full  flex flex-col gap-4 justify-between'>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {loaders.getLoading ?
+                                        Array(6).fill(null).map((_, index) => (
+                                            <BlockCard key={index} loading={loaders.getLoading} />
+                                        ))
+                                        :
+                                        currentBlocks.map((block, index) => {
+                                            const blockStates = {
+                                                active: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "active" ? 1 : 0), 0), 0),
+                                                inactive: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "inactive" ? 1 : 0), 0), 0),
+                                                maintenance: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "maintenance" ? 1 : 0), 0), 0),
+                                            };
+                                            return (
+                                                <BlockCard key={index} block={block?.block} states={blockStates} loading={loaders.getLoading} handleClick={() => handleNavigate(block._id)} />
+                                            )
+                                        })}
+                                </div>
+                                <div className="flex justify-center">
+                                    <Pagination
+                                        total={totalPages}
+                                        page={currentPage}
+                                        showControls
+                                        onChange={setCurrentPage}
+                                        color="primary"
+                                    />
+                                </div>
                             </div>
                         )}
                     </div>
-                )}
-                </div>
-}
+                }
             </div>
 
         </div>
-        
+
     );
- 
+
 };
 
-export default BlocksDashboard;
 
 
 const NoSearch = () => {

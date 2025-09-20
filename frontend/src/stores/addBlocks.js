@@ -1,8 +1,7 @@
 import { create } from "zustand";
 import apiClient from "../api/config/axios";
 import endpoints from "../api/config/endpoints";
-import { UseDashboardStore} from "./dashboard";
-
+import { UseDashboardStore } from "./index";
 
 export const UseAddBlocksStore = create((set, get) => ({
   loaders: {
@@ -22,17 +21,17 @@ export const UseAddBlocksStore = create((set, get) => ({
       const response = await apiClient.post(endpoints.BLOCK.ADDBLOCKS, {
         block,
       });
-      const newBlock = response?.data?.data; 
+      const newBlock = response?.data?.data;
       const blocks = currentState.blocks;
 
-      UseDashboardStore.setState({blocks:[...blocks,newBlock]});
-       set((prev) => ({
-         ...prev,
-         loaders: {
-           ...prev.loaders,
-           addLoading: false,
-         },
-       }));
+      UseDashboardStore.setState({ blocks: [...blocks, newBlock] });
+      set((prev) => ({
+        ...prev,
+        loaders: {
+          ...prev.loaders,
+          addLoading: false,
+        },
+      }));
       return { state: true, message: response?.data?.message };
     } catch (err) {
       set((prev) => ({
@@ -44,7 +43,7 @@ export const UseAddBlocksStore = create((set, get) => ({
       }));
       return {
         state: false,
-        message: err?.response?.data?.message || "Error occurred",
+        message: err?.response?.data?.message || "Network Error Occurred",
       };
     }
   },

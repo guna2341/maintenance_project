@@ -1,5 +1,5 @@
 import apiClient from "../config/axios";
-import handleApiError from "../utils/errorHandler";
+import { handleApiError } from "../utils/errorHandler";
 
 apiClient.interceptors.response.use(
   (response) => {

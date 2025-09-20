@@ -1,16 +1,14 @@
-import React from 'react'
-import { PieChart } from './pieChart'
-import { AlertCard } from './alertCard'
-import { RoomStatus } from './roomStatus';
+import React from 'react';
+import { PieChart, AlertCard, RoomStatus } from './index';
 
 export const Analytics = ({
   onHeightChange,
   states,
   block,
   loading,
- }) => {
+}) => {
   const analyticsRef = React.useRef(null);
-  
+
   React.useEffect(() => {
     const updateHeight = () => {
       if (analyticsRef.current) {

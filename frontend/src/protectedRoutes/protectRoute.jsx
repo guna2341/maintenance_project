@@ -1,8 +1,9 @@
 import { Outlet } from "react-router-dom";
-import LoginPage from "../pages/login";
 import { UseAuthStore } from "../stores";
+import { LoginPage } from "../pages/login";
 
 export const ProtectRoute = () => {
+
   const token = UseAuthStore(e => e.token);
 
   if (!token) {

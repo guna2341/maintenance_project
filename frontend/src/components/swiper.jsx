@@ -24,7 +24,6 @@ export const SwiperComponent = (
                 pagination={{
                     clickable: true,
                 }}
-                loop={false}
                 mousewheel={true}   
                 navigation={true}
                 modules={[FreeMode, Mousewheel, Navigation, Pagination]}

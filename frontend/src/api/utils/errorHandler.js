@@ -1,12 +1,12 @@
 import { addToast } from "@heroui/toast";
 import secureLocalStorage from "react-secure-storage";
 
-const handleApiError = (error) => {
+export const handleApiError = (error) => {
   if (error.response) {
     const { status, data } = error.response;
     switch (status) {
       case 401:
-
+      const token = secureLocalStorage.getItem("token");
         function handleToast() {
           addToast({
             title: "Invalid token",
@@ -15,11 +15,11 @@ const handleApiError = (error) => {
         }
         
         handleToast();
-        secureLocalStorage.removeItem("auth");
-        secureLocalStorage.clear();
-        setTimeout(() => {
-          window.location.href = "/login";
-        }, 1500);
+          secureLocalStorage.removeItem("auth");
+          secureLocalStorage.clear();
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 1500);
         break;
       case 403:
         console.error("Access denied");
@@ -57,4 +57,3 @@ const handleApiError = (error) => {
   }
 };
 
-export default handleApiError;

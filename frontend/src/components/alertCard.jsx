@@ -1,4 +1,3 @@
-import React from 'react';
 import { Alert } from '../assets';
 import { Skeleton } from '@heroui/skeleton';
 
@@ -43,7 +42,7 @@ export const AlertCard = ({
         <div className='border w-full flex flex-col gap-3 border-black/15 rounded-lg bg-white py-3.5 px-3 font-poppins font-normal text-[14px] text-custom-300'>
             Active Alerts
             <div className='flex flex-col gap-2'>
-                {alerts?.map((items,index) => items?.rooms?.map((item,roomIndex) => {
+                {alerts?.map((items, index) => items?.rooms?.map((item, roomIndex) => {
                     if (item?.issue) {
                         return (
                             <div className='flex items-center gap-2 bg-custom-500/10 rounded-lg p-1.5'

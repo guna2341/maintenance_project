@@ -2,7 +2,8 @@ import { StateCard } from './stateCard';
 import { OperationCard } from './operationCard';
 import { BlockHeader } from './blockHeader';
 import { ControlCard } from './controlCard';
-import { UseDashboardStore } from '../stores';
+import { UseDashboardStore, UseSwitchStore } from '../stores';
+import { addToast } from '@heroui/toast';
 
 export const BlockOverview = (
     {
@@ -15,9 +16,21 @@ export const BlockOverview = (
     }
 ) => {
     const keys = ["active", "inactive", "maintenance"];
-    const editState = UseDashboardStore(e => e.editState);
+    const setSwitchState = UseSwitchStore(e => e.setSwitchState);
+
+    function handleToast(title, message) {
+        addToast({
+            title: title,
+            description: message,
+            color: "danger",
+        });
+    }
+
     async function handleBlock(roomId, e) {
-        await editState({ roomId, floorId, blockId, state:e });
+        const response = await setSwitchState(blockId, floorId, roomId, e);
+        if (!response?.state) {
+            handleToast(response?.title, response?.message);
+        }
     }; 
     return (
         <div className='border w-full border-black/15 border-l-0 bg-custom-100 rounded-lg text-custom-300'>
@@ -50,18 +63,17 @@ export const BlockOverview = (
                         <div className='flex flex-wrap items-center gap-2.5 gap-y-4.5 w-full overflow-auto'>
                             {Array(6).fill(null).map((item,index) => (
                                 <ControlCard
-                                    loading={loading}
                                     key={index}
-                                   
+                                    loading={loading}
                                 />
                             ))}
                         </div> :
                         <div className='flex flex-wrap items-center gap-2.5 gap-y-4.5 w-full overflow-auto'>
                             {rooms?.map((item,index) => (
                                 <ControlCard
-                                    handleClick={(e) => handleBlock(item?._id,e)}
-                                    loading={loading}
                                     key={index}
+                                    handleClick={(e) => handleBlock(item?.roomId,e)}
+                                    loading={loading}
                                     state={item?.state}
                                     roomName={item?.room}
                                 />
