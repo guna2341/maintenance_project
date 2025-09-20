@@ -34,7 +34,7 @@ export const UseAuthStore = create((set, get) => ({
       secureLocalStorage.setItem("role", response?.data?.userData?.role);
       return { state: true, message: "Logged in successfully" };
     } catch (err) {
-      return { state: false, message: err };
+      return { state: false, message:err?.response?.data?.message || "Network Error Occurred" };
     }
   },
   logout: () => {

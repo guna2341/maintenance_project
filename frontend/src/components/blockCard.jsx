@@ -24,6 +24,7 @@ export const BlockCard = (
             block={block?.toUpperCase()}
             states={states}
           />
+          
         </div>
         <CardBody
         >

@@ -64,8 +64,8 @@ export const DashboardLayout = ({ filteredBlock }) => {
                                             block={`${blocks[index]?.block?.toUpperCase()} - ${item?.block}`}
                                             states={states}
                                             rooms={item?.rooms}
-                                            floorId={item?._id}
-                                            blockId={blocks[index]?._id}
+                                            floorId={item?.floorId}
+                                            blockId={blocks[index]?.blockId}
                                         />
                                     )
                                 })}

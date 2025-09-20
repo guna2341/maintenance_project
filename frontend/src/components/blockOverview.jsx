@@ -18,16 +18,16 @@ export const BlockOverview = (
     const keys = ["active", "inactive", "maintenance"];
     const setSwitchState = UseSwitchStore(e => e.setSwitchState);
 
-    function handleToast(title,message) {
+    function handleToast(title, message) {
         addToast({
             title: title,
-            message: message,
+            description: message,
             color: "danger",
         });
     }
 
     async function handleBlock(roomId, e) {
-        const response = await setSwitchState( blockId, floorId, roomId, e);
+        const response = await setSwitchState(blockId, floorId, roomId, e);
         if (!response?.state) {
             handleToast(response?.title, response?.message);
         }
@@ -72,7 +72,7 @@ export const BlockOverview = (
                             {rooms?.map((item,index) => (
                                 <ControlCard
                                     key={index}
-                                    handleClick={(e) => handleBlock(item?._id,e)}
+                                    handleClick={(e) => handleBlock(item?.roomId,e)}
                                     loading={loading}
                                     state={item?.state}
                                     roomName={item?.room}

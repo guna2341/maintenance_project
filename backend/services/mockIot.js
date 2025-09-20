@@ -18,23 +18,20 @@ const mockIOT = async () => {
   });
 
   client.on("message", async (topic, message) => {
-    console.log();
-    console.log("Received Message:");
-    message = JSON.parse(message);
-    console.log(message);    
     try {
-      const parts = topic.split("/");
-      const blockId = parts[1];
-      const floorId = parts[2];
-      const roomId = parts[3];
-      const status = JSON.stringify({
-        status: message.command
-      })
-      publishMessage(`client/${blockId}/${floorId}/${roomId}`, status);
-      console.log();
-    } catch (err) {
-      console.error("❌ Error updating room:", err);
+      console.log("Received Message:");
+      const json = JSON.parse(message);
+      console.log(`Topic: ${topic} ${json?.command}`);
+      const top = topic.split("/");
+      let publishTopic = `client_devices/${top[1]}/${top[2]}/${top[3]}`;
+      const state = json.command == "ON" ? "ON" : "OFF";
+      let publishMsg = JSON.stringify({ status: state });
+      publishMessage(publishTopic, publishMsg);
     }
+    catch (err) {
+      console.log(err);
+    }
+   
   });
 };
 

@@ -12,6 +12,7 @@ export const AddRoomModal = (
         edit,
         onClose,
         roomName,
+        room_Id,
         roomIssue,
         roomState,
         handleConfirm
@@ -33,27 +34,46 @@ export const AddRoomModal = (
         }
     ];
     const [selectedState, setSelectedState] = React.useState("inactive");
+    const [err, setErr] = React.useState("");
     const [room, setRoom] = React.useState(roomName);
     const [issue, setIssue] = React.useState(roomIssue);
+    const [roomId, setRoomId] = React.useState(room_Id);
     const [deleteRoom, setDeleteRoom] = React.useState(false);
 
     React.useEffect(() => {
         setRoom(edit ? roomName : "");
         setDeleteRoom(false);
         setIssue(roomIssue);
+        setRoomId(room_Id);
         setSelectedState(roomState);
     }, [roomName, isOpen, roomIssue]);
 
     function handleClose(e) {
         e.preventDefault();
+        if (err.trim()) {
+            return;
+        }
         handleConfirm({
             room,
             state: selectedState,
             issue: issue,
+            room_Id:roomId,
             type: deleteRoom ? "delete" : "edit"
         });
         setRoom("");
+        setRoomId("");
         setSelectedState("inactive");
+    } 
+    
+    function handleRoomId(e) {
+        const hasHyphen = /-/.test(e.target.value);
+        setRoomId(e.target.value);
+        if (hasHyphen) {
+            setErr("Id cannot have hyphens");
+        }
+        else {
+            setErr("");
+        }
     }
 
     return (
@@ -85,6 +105,17 @@ export const AddRoomModal = (
                             <div className='flex flex-col gap-4'>
                                 <InputComponent
                                     autofocus
+                                    name={"room_Id"}
+                                    isRequired
+                                    isInvalid={!!err}
+                                    errorMessage={err}
+                                    placeholder={"Eg: CB101"}
+                                    label={"Room ID"}
+                                    value={roomId ?? ""}
+                                    onchange={handleRoomId}
+                                    labelPlacement={"outside-top"}
+                                />
+                                <InputComponent
                                     name={"room_name"}
                                     isRequired
                                     placeholder={"Eg: CB101"}

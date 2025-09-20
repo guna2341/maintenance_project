@@ -43,7 +43,7 @@ export const UseAddBlocksStore = create((set, get) => ({
       }));
       return {
         state: false,
-        message: err?.response?.data?.message || "Error occurred",
+        message: err?.response?.data?.message || "Network Error Occurred",
       };
     }
   },

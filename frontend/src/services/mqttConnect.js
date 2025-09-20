@@ -1,6 +1,7 @@
 import mqtt from "mqtt";
 import { UseSwitchStore } from "../stores/switchStore";
 import { addToast } from "@heroui/toast";
+import { UseDashboardStore } from "../stores";
 
 let mqttClient;
 
@@ -13,28 +14,38 @@ export const mqttConnect = () => {
 
   mqttClient.on("connect", () => {
     console.log("✅ Connected to MQTT broker");
-    mqttClient.subscribe(`client/+/+/+`, (err) => {
+    mqttClient.subscribe(`client_devices/+/+/+`, (err) => {
       if (!err) {
-        // console.log("Subscribed to AcerDevices/+/+/+");
+        UseDashboardStore.setState({ broker: true });
+        console.log("Subscribed to devices/+/+/+");
       }
     });
   });
   mqttClient.removeAllListeners("message");
   mqttClient.on("message", (topic, message) => {
-    console.log("Message listeners:", mqttClient.listeners("message").length);
-    const store = UseSwitchStore.getState();
-    const topics = topic.split("/");
-    const msg = JSON.parse(message);
-    const state = msg.status == "ON" ? "active" : "inactive";
+    console.log(topic + " " + message.toString());
     UseSwitchStore.setState({ loading: false });
-    console.log(`${topic}: ${message.toString()}`);
-    const response = store.switchState(topics[1], topics[2], topics[3], state);
-    if (response.state) {
-      addToast({
-        title: "MQTT Update",
-        description: response.message,
-        color: response.status == "active" ? "success" : "danger",
-      });
+    const store = UseSwitchStore.getState();
+    try {
+      const topics = topic.split("/");
+      message = message.toString();
+      const msg = JSON.parse(message.toString());
+      // console.log(`${topic}: ${message.toString()}`);
+      const response = store.switchState(
+        topics[1],
+        topics[2],
+        topics[3],
+        msg.status == "ON" ? "active" : "inactive"
+      );
+      if (response.state) {
+        addToast({
+          title: "MQTT Update",
+          description: response.message,
+          color: response.status == "active" ? "success" : "danger",
+        });
+      }
+    } catch (err) {
+      console.log(err);
     }
   });
 };

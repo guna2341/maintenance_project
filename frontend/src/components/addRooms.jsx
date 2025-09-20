@@ -47,7 +47,7 @@ export const AddRooms = ({ setRoom, floor, floorId, loading }) => {
                             edit
                             state={room?.state}
                             roomName={room?.room}
-                            handleClick={() => setRoom(p => ({ ...p, roomId: index, floorId, room: true, roomName: room?.room, issue: room?.issue, state: room?.state }))}
+                            handleClick={() => setRoom(p => ({ ...p, roomId: index, floorId, room: true, roomName: room?.room, issue: room?.issue, state: room?.state, room_Id:room?.roomId }))}
                         />
                     )}
             </div>

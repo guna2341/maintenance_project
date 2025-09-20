@@ -16,30 +16,9 @@ const switchStatus = async (req, res) => {
      command: status === "active" ? "ON" : "OFF",
    });
 
-
     publishMessage(topic , payload);
 
-    const updated = await blockModel.findOneAndUpdate(
-      { _id: blockId },
-      {
-        $set: {
-          "floors.$[floor].rooms.$[room].state": status,
-        },
-      },
-      {
-        new: true,
-        arrayFilters: [
-          { "floor._id": new mongoose.Types.ObjectId(floorId) },
-          { "room._id": new mongoose.Types.ObjectId(roomId) },
-        ],
-      }
-    );
-
-    if (!updated) {
-      return res.status(404).json({ message: "Block/Floor/Room not found" });
-    }
-
-    res.json({ message: "Status updated successfully", data: updated });
+    res.json({ message: "Status updated successfully"});
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error", error: err.message });

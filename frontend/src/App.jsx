@@ -6,7 +6,7 @@ import { MainLayout } from "./layout/mainLayout";
 import { Route, Routes } from "react-router-dom";
 import { ProtectRoute, Auth } from "./protectedRoutes";
 import { mqttConnect, mqttDisconnect } from "./services/mqttConnect.js";
-import { AddBlockPage, Dashboard, BlocksDashboard, EditBlockPage, LoginPage } from './pages';
+import { AddBlockPage, Dashboard, BlocksDashboard, EditBlockPage, LoginPage, DisplayBlockId } from './pages';
 
 // REMOVE BACKEND DELAY
 
@@ -19,7 +19,6 @@ const App = () => {
         }
     }, []);
 
-
     return (
         <Routes>
             <Route element={<Auth />}>
@@ -30,6 +29,7 @@ const App = () => {
                         <Route path="dashboard" element={<Dashboard />} />
                         <Route path="addBlock" element={<AddBlockPage />} />
                         <Route path="displayBlocks" element={<BlocksDashboard />} />
+                        <Route path="displayId" element={<DisplayBlockId />} />
                         <Route path="editBlock/:id" element={<EditBlockPage />} />
                     </Route>
                     <Route path="*" element={<NotFound />} />

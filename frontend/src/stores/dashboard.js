@@ -7,6 +7,7 @@ export const UseDashboardStore = create((set, get) => ({
   filteredBlocks: [],
   menuExpanded: true,
   fetched: false,
+  broker:false,
   loaders: {
     getLoading: false,
     editLoading: false,

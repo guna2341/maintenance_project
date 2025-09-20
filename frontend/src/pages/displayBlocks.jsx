@@ -90,7 +90,7 @@ export const BlocksDashboard = () => {
                             <div className='text-red-600 text-xl mb-2'>⚠️</div>
                             <h3 className='text-lg font-semibold text-red-800 mb-2'>No Data Available</h3>
                             <p className='text-red-700 mb-4'>
-                                Unable to load dashboard blocks. This might be due to a connection issue or server problem.
+                                Unable to load dashboard blocks. This might be due to a connection issue or no blocks added.
                             </p>
                             <Button
                                 onPress={() => {

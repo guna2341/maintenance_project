@@ -8,28 +8,39 @@ export const AddFloor = ({
     edit,
     isOpen,
     onClose,
+    floor_Id,
     floorName,
     handleFloor
 }) => {
-
-    function handleClose(e) {
-        e.preventDefault();
-        handleFloor(input);
-        setInput('');
-    }
-
     const [input, setInput] = React.useState(floorName);
+    const [floorId, setFloorId] = React.useState(floor_Id);
+    const [err, setErr] = React.useState("");
 
     React.useEffect(() => {
         setInput(edit ? floorName : "");
-    }, [floorName, isOpen]);
+        setFloorId(edit ? floor_Id : "");
+    }, [floorName, floor_Id, isOpen]);
+
+    function handleClose(e) {
+        e.preventDefault();
+        handleFloor({ floor_Id:floorId, floorName: input });
+        setInput('');
+        setFloorId('');
+    }
+
+    function handleFloorId(e) {
+        const hasHyphen = /-/.test(e.target.value);
+        setFloorId(e.target.value);
+        if (hasHyphen) {
+            setErr("Id cannot have hyphens");
+        }
+        else {
+            setErr("");
+        }
+    }
 
     return (
-        <Modal
-            isOpen={isOpen}
-            onOpenChange={onClose}
-            hideCloseButton
-        >
+        <Modal isOpen={isOpen} onOpenChange={onClose} hideCloseButton>
             <ModalContent>
                 <Form onSubmit={handleClose} className='w-full'>
                     <ModalHeader>
@@ -39,6 +50,16 @@ export const AddFloor = ({
                         <InputComponent
                             isRequired
                             autofocus
+                            label={"Floor ID"}
+                            isInvalid={!!err}
+                            errorMessage={err}
+                            labelPlacement={"outside-top"}
+                            placeholder={"Enter Floor ID"}
+                            value={floorId}
+                            onchange={handleFloorId}
+                        />
+                        <InputComponent
+                            isRequired
                             label={"Floor Name"}
                             labelPlacement={"outside-top"}
                             placeholder={"Enter Floor Name"}
@@ -52,12 +73,14 @@ export const AddFloor = ({
                             onPress={() => {
                                 onClose("cancel");
                                 setInput('');
+                                setFloorId('');
                             }}
-                        >Cancel</Button>
-                        <Button
-                            color='primary'
-                            type='submit'
-                        >Save</Button>
+                        >
+                            Cancel
+                        </Button>
+                        <Button color='primary' type='submit'>
+                            Save
+                        </Button>
                     </ModalFooter>
                 </Form>
             </ModalContent>

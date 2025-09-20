@@ -9,9 +9,9 @@ export const UseSwitchStore = create((set, get) => ({
   switchState: (blockId, floorId, roomId, state) => {
     const dashboardStore = UseDashboardStore.getState();
     const blocks = dashboardStore.blocks;
-    const block = blocks.find((block) => block._id === blockId);
-    const floor = block.floors.find((floor) => floor._id === floorId);
-    const room = floor.rooms.find((room) => room._id === roomId);
+    const block = blocks.find((block) => block.blockId === blockId);
+    const floor = block.floors.find((floor) => floor.floorId === floorId);
+    const room = floor.rooms.find((room) => room.roomId === roomId);
     if (!block || !floor || !room) return;
     const temp = room.state;
     room.state = state;
@@ -55,24 +55,20 @@ export const UseSwitchStore = create((set, get) => ({
         roomId,
         status: state == "active" ? "inactive" : "active",
       });
-      const block = blocks.find((block) => block._id === blockId);
-      const floor = block.floors.find((floor) => floor._id === floorId);
-      const room = floor.rooms.find((room) => room._id === roomId);
+      const block = blocks.find((block) => block.blockId === blockId);
+      const floor = block.floors.find((floor) => floor.floorId === floorId);
+      const room = floor.rooms.find((room) => room.roomId === roomId);
       if (!block || !floor || !room) return;
       const temp = room.state;
       room.state = state;
-      return await new Promise((resolve) => {
-        const timeout = setTimeout(() => {
-          if (get().loading) {
-            set({ loading: false });
-            resolve({
-              state: false,
-              title: "Request Timeout",
-              message: "Device status not retrievable",
-            });
-          }
-        }, 10000);
+      await new Promise((resolve) => setTimeout(resolve, 10000));
+      UseDashboardStore.setState({
+        loaders: { ...state.loaders, editLoading: false },
       });
+      return {
+        state: !get().loading,
+        message: "Some error occured.Refresh the page and try again.",
+      };
       // const newBlocks = blocks.map((block) =>
       //   block._id === blockId
       //     ? {
@@ -91,14 +87,13 @@ export const UseSwitchStore = create((set, get) => ({
       //     : block
       // );
       // UseDashboardStore.setState({ blocks: newBlocks });
-      UseDashboardStore.setState({
-        loaders: { ...state.loaders, editLoading: false },
-      });
     } catch (err) {
       UseDashboardStore.setState({
         loaders: { ...state.loaders, editLoading: false },
       });
       return { state: false, message: err?.response?.data?.message };
+    } finally {
+      set({ loading: false });
     }
   },
 }));

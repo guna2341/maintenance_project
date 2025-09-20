@@ -1,13 +1,14 @@
 import React from 'react';
 import { cn } from '@heroui/theme';
 import { Chip } from '@heroui/chip';
-import { UseAuthStore } from "../stores";
+import { UseAuthStore, UseDashboardStore } from "../stores";
 import { DownArrow, Logo } from '../assets';
 import { ProfileMenu } from './profileMenu';
 
 export const Appbar = () => {
     const [menu, setMenu] = React.useState(false);
     const email = UseAuthStore(e => e.email);
+    const broker = UseDashboardStore(e => e.broker);
     return (
         <div
             className='max-h-[80px] flex items-center justify-between bg-custom-100 p-8 border-b border-custom-1000/50'
@@ -26,33 +27,51 @@ export const Appbar = () => {
                     </span>
                 </div>
             </div>
-            <ProfileMenu
-                isOpen={menu}
-                setIsOpen={(open) => setMenu(open)}
-            >
-                <div className='flex items-center'
-                >
-                    <Chip
-                        className={cn('bg-white cursor-pointer py-[5px] hover:shadow transition-all px-0 !h-fit border border-black/10 items-center', {
-                            'shadow': menu
-                        })}
-                    >
-                        <div className='flex items-center gap-4'>
-                            <div
-                                className='rounded-full font-poppins font-normal text-md sm:text-base min-w-[20px] min-h-[20px] sm:min-w-[25px] sm:min-h-[25px] flex items-center justify-center text-white bg-orange-400'
-                            >
-                                {email[0].toUpperCase()}
-                            </div>
-                            <span className={cn('transition-all', {
-                                'rotate-180': menu,
-                                'rotate-0': !menu
-                            })}>
-                                <DownArrow />
+            <div className='flex items-center gap-5'>
+                <div className='font-poppins font-medium'>
+                    {broker ? (
+                        <div className="flex items-center gap-2  text-green-500">
+                            <span className="min-w-2 min-h-2 w-2 h-2 rounded-full bg-green-500"></span>
+                            Broker Connected
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-2">
+                            <div className="min-w-2 min-h-2 w-2 h-2 rounded-full bg-amber-300 animate-pulse"></div>
+                            <span className="relative text-amber-300">
+                                Broker Connecting
+                                <span className="animate-pulse">...</span>
                             </span>
                         </div>
-                    </Chip>
+                    )}
                 </div>
-            </ProfileMenu>
+                <ProfileMenu
+                    isOpen={menu}
+                    setIsOpen={(open) => setMenu(open)}
+                >
+                    <div className='flex items-center'
+                    >
+                        <Chip
+                            className={cn('bg-white cursor-pointer py-[5px] hover:shadow transition-all px-0 !h-fit border border-black/10 items-center', {
+                                'shadow': menu
+                            })}
+                        >
+                            <div className='flex items-center gap-4'>
+                                <div
+                                    className='rounded-full font-poppins font-normal text-md sm:text-base min-w-[20px] min-h-[20px] sm:min-w-[25px] sm:min-h-[25px] flex items-center justify-center text-white bg-orange-400'
+                                >
+                                    {email[0].toUpperCase()}
+                                </div>
+                                <span className={cn('transition-all', {
+                                    'rotate-180': menu,
+                                    'rotate-0': !menu
+                                })}>
+                                    <DownArrow />
+                                </span>
+                            </div>
+                        </Chip>
+                    </div>
+                </ProfileMenu>
+            </div>
         </div>
     )
 }
