@@ -10,11 +10,11 @@ export const ControlCard = ({
   roomName,
   loading,
   handleClick,
+  connected,
   edit
 }) => {
   const [switchState, setSwitchState] = React.useState(state === "active" ? true : false);
   const [open, setOpen] = React.useState(false);
-
   const loaders = UseDashboardStore(e => e.loaders);
   const sl = UseSwitchStore(e => e.loading);
 
@@ -35,7 +35,7 @@ export const ControlCard = ({
       handleClick();
       return;
     }
-    if (!loading && state !== "maintenance" && !edit) {
+    if (!loading && connected && !edit) {
       setOpen(true);
     }
   }
@@ -52,14 +52,13 @@ export const ControlCard = ({
       setOpen(false);
     }
   }
-
   return (
     <div
       onClick={handleSwitch}
       className={cn('border rounded-lg bg-white flex flex-col gap-4 justify-between items-center w-full max-w-[179px] py-2.5 px-3.5 cursor-pointer', {
         'border-custom-500': !switchState,
         'border-custom-400': switchState,
-        "border-custom-200 cursor-auto": state === "maintenance"
+        "border-custom-200 cursor-auto": !connected
       })}
     >
       <div className='flex items-center w-full'>
@@ -68,7 +67,7 @@ export const ControlCard = ({
             className={cn('border border-custom-400 rounded w-fit px-5 text-center items-center font-poppins font-normal text-sm', {
               'border-custom-500 text-custom-500': !switchState,
               'border-custom-400 text-custom-400': switchState,
-              "border-custom-200 text-custom-200": state === "maintenance"
+              "border-custom-200 text-custom-200": !connected
             })}
           >
             {loading ? (
@@ -81,12 +80,12 @@ export const ControlCard = ({
       </div>
 
       <Switch
-        color={state === "maintenance" ? "warning" : "success"}
-        isDisabled={loading || state === "maintenance"}
+        color={!connected  ? "warning" : "success"}
+        isDisabled={loading || !connected}
         isSelected={switchState}
         onChange={handleSwitch}
         classNames={{
-          wrapper: `w-[60px] h-[28px] bg-custom-500 group-data-[selected=true]:text-custom-400 group-data-[focus-visible=true]:ring-0 group-data-[focus-visible=true]:border-0 ${state === "maintenance" && "bg-warning"}`,
+          wrapper: `w-[60px] h-[28px] bg-custom-500 group-data-[selected=true]:text-custom-400 group-data-[focus-visible=true]:ring-0 group-data-[focus-visible=true]:border-0 ${(!connected) && "bg-warning"}`,
           thumb: "group-data-[selected]:group-data-[pressed=true]:ml-7.5 group-data-[pressed=true]:w-5.5 w-5 h-5 group-data-[selected=true]:ms-8",
           startContent: "start-2.5 font-poppins font-normal text-white text-sm",
           endContent: "end-2 font-poppins font-normal text-white text-sm"

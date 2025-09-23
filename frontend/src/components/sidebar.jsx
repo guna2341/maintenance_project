@@ -14,33 +14,33 @@ export const SideBar = () => {
     const location = useLocation();
     const menu = [
         {
-            label:"DashBoard",
-            link:"dashboard",
-            icon: <Dashboard/>
+            label: "DashBoard",
+            link: "dashboard",
+            icon: <Dashboard />
         },
         {
             label: "View Blocks",
-            link:"displayBlocks",
-            icon: <Blocks/>
+            link: "displayBlocks",
+            icon: <Blocks />
         },
         {
             label: "Add Block",
             link: "addBlock",
-            icon: <AddBlock/>
+            icon: <AddBlock />
         }
     ];
 
     const routes = [
         {
-            label:"dashboard",
+            label: "dashboard",
             routes: ["dashboard"]
         },
         {
-            label:"displayBlocks",
-            routes: ["displayBlocks","editBlock"]
+            label: "displayBlocks",
+            routes: ["displayBlocks", "editBlock"]
         },
         {
-            label:"addBlock",
+            label: "addBlock",
             routes: ["addBlock"]
         }
     ];
@@ -48,65 +48,65 @@ export const SideBar = () => {
     const currentLocation = location?.pathname.split("/")[2];
     const selectedKey = routes.find(item => item.routes.includes(currentLocation));
 
-  return (
-      <Sidebar collapsedWidth="55px" 
-        rootStyles={{
-            height:"100%"
-        }}
-       menuItemStyles={ {
-            padding:"0px 10px",
-        }}
-        width='200px'
-      collapsed={collapsible}>
-        <div className={cn('flex justify-end relative w-full mt-2 rounded-lg p-2',{
-        })}>
-              <span className='cursor-pointer relative pr-1' onClick={() => setDashboard("menuExpanded", !collapsible)}>
-                  <span className={cn('opacity-0 transition-all duration-300 absolute',{
-                        "opacity-100" : !collapsible
+    return (
+        <Sidebar collapsedWidth="55px"
+            rootStyles={{
+                height: "100%"
+            }}
+            menuItemStyles={{
+                padding: "0px 10px",
+            }}
+            width='200px'
+            collapsed={collapsible}>
+            <div className={cn('flex justify-end relative w-full mt-2 rounded-lg p-2', {
+            })}>
+                <span className='cursor-pointer relative pr-1' onClick={() => setDashboard("menuExpanded", !collapsible)}>
+                    <span className={cn('opacity-0 transition-all duration-300 absolute', {
+                        "opacity-100": !collapsible
                     })}>
-                    <Close width={28} height={28} />
+                        <Close width={28} height={28} />
                     </span>
-                  <span className={cn('opacity-0 transition-all duration-300', {
-                      "opacity-100": collapsible
-                  })}>
-                    <Hamburger2 width={28} height={28} />
+                    <span className={cn('opacity-0 transition-all duration-300', {
+                        "opacity-100": collapsible
+                    })}>
+                        <Hamburger2 width={28} height={28} />
                     </span>
-              </span>
-        </div>
-        <div>        
-        <div>
-       <Tabs 
-       selectedKey={selectedKey?.label}
-       placement='start'
-       className='w-full mt-4'
-       classNames={{
-        tabWrapper:"w-full",
-        tabList:"w-full bg-transparent",
-        tab:'w-full h-12 justify-start pl-2.5 font-medium text-custom-300 text-base',
-       }}
-       >
-            {menu.map((item) => (
-          
-                <Tab
-                key={item.link} title={
-                    <div className='flex items-center gap-4'>
-                        <span>
-                            {item.icon}
-                            </span><span>
-                                {item?.label}
-                            </span>
-                    </div>
-                } 
-                onClick={() => nav(item?.link)}
-              >
-             
-              </Tab>
-            ))}
-          </Tabs>
-          </div>
-        
-          </div>
+                </span>
+            </div>
+            <div>
+                <div>
+                    <Tabs
+                        selectedKey={selectedKey?.label}
+                        placement='start'
+                        className='w-full mt-4'
+                        classNames={{
+                            tabWrapper: "w-full",
+                            tabList: "w-full bg-transparent",
+                            tab: 'w-full h-12 justify-start pl-2.5 font-medium text-custom-300 text-base',
+                        }}
+                    >
+                        {menu.map((item) => (
 
-                  </Sidebar>
-  )
+                            <Tab
+                                key={item.link} title={
+                                    <div className='flex items-center gap-4'>
+                                        <span>
+                                            {item.icon}
+                                        </span><span>
+                                            {item?.label}
+                                        </span>
+                                    </div>
+                                }
+                                onClick={() => nav(item?.link)}
+                            >
+
+                            </Tab>
+                        ))}
+                    </Tabs>
+                </div>
+
+            </div>
+
+        </Sidebar>
+    )
 }

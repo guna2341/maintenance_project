@@ -5,7 +5,11 @@ const roomSchema = new mongoose.Schema({
   room: { type: String, required: true },
   state: String,
   issue: String,
-});
+  status: {
+    type:String,
+    default:"disconnected",
+    enum: ["connected", "disconnected"]
+  }});
 
 const floorSchema = new mongoose.Schema({
   floorId:String,

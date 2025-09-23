@@ -15,17 +15,16 @@ export const UseSwitchStore = create((set, get) => ({
     if (!block || !floor || !room) return;
     const temp = room.state;
     room.state = state;
-
     const newBlocks = blocks.map((block) =>
-      block._id === blockId
+      block.blockId === blockId
         ? {
             ...block,
             floors: block.floors.map((floor) =>
-              floor._id === floorId
+              floor.floorId === floorId
                 ? {
                     ...floor,
                     rooms: floor.rooms.map((room) =>
-                      room._id === roomId ? { ...room, state: state } : room
+                      room.Id === roomId ? { ...room, state: state } : room
                     ),
                   }
                 : floor
@@ -33,6 +32,8 @@ export const UseSwitchStore = create((set, get) => ({
           }
         : block
     );
+    console.log("switch: ", newBlocks); 
+
     UseDashboardStore.setState({ blocks: newBlocks });
     return {
       state: temp != state,

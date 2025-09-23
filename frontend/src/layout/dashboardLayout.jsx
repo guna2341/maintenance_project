@@ -53,8 +53,8 @@ export const DashboardLayout = ({ filteredBlock }) => {
                                 {blocks[index]?.floors?.map(item => {
                                     const states = {
                                         active: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'active' ? 1 : 0), 0),
-                                        inactive: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'inactive' ? 1 : 0), 0),
-                                        maintenance: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'maintenance' ? 1 : 0), 0)
+                                        inactive: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'inactive' && item?.status != "disconnected" ? 1 : 0), 0),
+                                        maintenance: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'maintenance' || item?.status == "disconnected" ? 1 : 0), 0)
                                     };
                                     return (
                                         <BlockOverview

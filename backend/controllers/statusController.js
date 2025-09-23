@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
-const blockModel = require("../model/blockModel");
 const { publishMessage } = require("../services/mqtt");
+const { ack, devices } = require("../sharedState");
 
 const switchStatus = async (req, res) => {
   try {
@@ -9,14 +8,16 @@ const switchStatus = async (req, res) => {
     if (!blockId || !floorId || !roomId || !status) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-
-    const topic = `acer_devices/${blockId}/${floorId}/${roomId}`;
-   const payload = JSON.stringify({
-     deviceId: `${blockId}/${floorId}/${roomId}`,
+    const index = `${blockId}/${floorId}/${roomId}`;
+    // const index = "SF-1";
+    const topic = `devices/${index}/control`;
+    devices[index] = status == "active" ? "ON" : "OFF";
+  const payload = JSON.stringify({
+     deviceId: `${index}`,
      command: status === "active" ? "ON" : "OFF",
    });
 
-    publishMessage(topic , payload);
+    publishMessage(topic, payload);
 
     res.json({ message: "Status updated successfully"});
   } catch (err) {

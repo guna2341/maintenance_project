@@ -3,7 +3,7 @@ import { Skeleton } from '@heroui/skeleton'
 import { cn } from '@heroui/theme'
 import React from 'react'
 
-export const StateSummary = ({ cardName, length, label, loading = true }) => {
+export const StateSummary = ({ cardName, length, label, loading = false }) => {
     function getBg(state) {
         switch (state) {
             case 'active':

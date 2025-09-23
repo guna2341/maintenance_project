@@ -7,6 +7,7 @@ import { Route, Routes } from "react-router-dom";
 import { ProtectRoute, Auth } from "./protectedRoutes";
 import { mqttConnect, mqttDisconnect } from "./services/mqttConnect.js";
 import { AddBlockPage, Dashboard, BlocksDashboard, EditBlockPage, LoginPage, DisplayBlockId } from './pages';
+import { lastWill, lastWillDisconnect } from "./services/lwt.js";
 
 // REMOVE BACKEND DELAY
 
@@ -14,8 +15,10 @@ const App = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     React.useEffect(() => {
         mqttConnect();
+        lastWill();
         return () => {
             mqttDisconnect();
+            lastWillDisconnect();   
         }
     }, []);
 
