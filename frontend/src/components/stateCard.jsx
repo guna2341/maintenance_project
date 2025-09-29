@@ -2,7 +2,7 @@ import { Skeleton } from '@heroui/skeleton';
 import { Active, Inactive, Maintenance } from '../assets';
 import { Chip } from '@heroui/chip';
 
-export const StateCard = (
+export const    StateCard = (
     {
         states,
         item,

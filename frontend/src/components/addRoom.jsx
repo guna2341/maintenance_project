@@ -10,6 +10,8 @@ export const AddRoomModal = (
     {
         isOpen,
         edit,
+        block,
+        floorId,
         onClose,
         roomName,
         room_Id,
@@ -18,7 +20,6 @@ export const AddRoomModal = (
         handleConfirm
     }
 ) => {
-
     const states = [
         {
             key: "active",
@@ -34,7 +35,10 @@ export const AddRoomModal = (
         }
     ];
     const [selectedState, setSelectedState] = React.useState("inactive");
-    const [err, setErr] = React.useState("");
+    const [err, setErr] = React.useState({
+        roomId: "",
+        roomName:""
+    });
     const [room, setRoom] = React.useState(roomName);
     const [issue, setIssue] = React.useState(roomIssue);
     const [roomId, setRoomId] = React.useState(room_Id);
@@ -45,34 +49,52 @@ export const AddRoomModal = (
         setDeleteRoom(false);
         setIssue(roomIssue);
         setRoomId(room_Id);
-        setSelectedState(roomState);
+        setErr("");
+        setSelectedState(roomState ?? "inactive");
     }, [roomName, isOpen, roomIssue]);
 
-    function handleClose(e) {
-        e.preventDefault();
-        if (err.trim()) {
+    function handleSubmit() {
+        if (!roomId) {
+            setErr(p => ({ ...p, roomId: "Please fill out this field" }));
+            return;
+        }
+        if (!room) {
+            setErr(p => ({ ...p, room: "Please fill out this field" }));
+            return;
+        }
+        handleClose();
+    }
+
+    function handleClose() {
+ 
+        if (err.room || err.roomId) {
             return;
         }
         handleConfirm({
             room,
             state: selectedState,
             issue: issue,
-            room_Id:roomId,
+            room_Id: roomId,
             type: deleteRoom ? "delete" : "edit"
         });
         setRoom("");
         setRoomId("");
         setSelectedState("inactive");
-    } 
-    
+    }
+
     function handleRoomId(e) {
-        const hasHyphen = /-/.test(e.target.value);
+        const floor = block?.floors?.find((_, index) => index == floorId);
+        const exists = floor?.rooms?.some(item => item.roomId.toLowerCase() == e.target.value.toLowerCase());
+        const hasSlash = /\//.test(e.target.value);
         setRoomId(e.target.value);
-        if (hasHyphen) {
-            setErr("Id cannot have hyphens");
+        if (exists) {
+            setErr(p => ({ ...p, roomId: "Room ID already exists" }));
+        }
+        else if (hasSlash) {
+            setErr(p => ({ ...p, roomId: "Id cannot have hyphens" }));
         }
         else {
-            setErr("");
+            setErr(p => ({ ...p, roomId: ""}));
         }
     }
 
@@ -85,7 +107,7 @@ export const AddRoomModal = (
             }}
         >
             <ModalContent className='font-poppins'>
-                <Form className='w-full' onSubmit={handleClose}>
+                <Form className='w-full' onSubmit={handleSubmit}>
                     <ModalHeader>
                         {deleteRoom ? <span className='flex items-center gap-2 mr-1'>
                             <Delete />
@@ -107,8 +129,8 @@ export const AddRoomModal = (
                                     autofocus
                                     name={"room_Id"}
                                     isRequired
-                                    isInvalid={!!err}
-                                    errorMessage={err}
+                                    isInvalid={!!err.roomId}
+                                    errorMessage={err.roomId}
                                     placeholder={"Eg: CB101"}
                                     label={"Room ID"}
                                     value={roomId ?? ""}
@@ -118,10 +140,17 @@ export const AddRoomModal = (
                                 <InputComponent
                                     name={"room_name"}
                                     isRequired
+                                    isInvalid={!!err.room}
+                                    errorMessage={err.room}
                                     placeholder={"Eg: CB101"}
                                     label={"Room Name"}
                                     value={room ?? ""}
-                                    onchange={e => setRoom(e.target.value)}
+                                    onchange={e => {
+                                        setRoom(e.target.value); 
+                                        if (e.target.value || e.target.value.trim()) {
+                                            setErr(p => ({ ...p, room: "" }));
+                                        }
+                                    }}
                                     labelPlacement={"outside-top"}
                                 />
                                 <InputComponent
@@ -175,7 +204,7 @@ export const AddRoomModal = (
                         }
                         <Button
                             color={!deleteRoom ? "primary" : "danger"}
-                            type='submit'
+                            onPress={handleSubmit}
                         >
                             {!deleteRoom ? "Save" : "Delete"}
                         </Button>

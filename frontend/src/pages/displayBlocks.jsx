@@ -126,14 +126,14 @@ export const BlocksDashboard = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {loaders.getLoading ?
                                         Array(6).fill(null).map((_, index) => (
-                                            <BlockCard key={index} loading={loaders.getLoading} />
+                                            <BlockCard key={index} loading={loaders.getLoading} /> 
                                         ))
                                         :
                                         currentBlocks.map((block, index) => {
                                             const blockStates = {
                                                 active: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "active" ? 1 : 0), 0), 0),
-                                                inactive: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "inactive" ? 1 : 0), 0), 0),
-                                                maintenance: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "maintenance" ? 1 : 0), 0), 0),
+                                                inactive: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "inactive" && room?.status != "disconnected" ? 1 : 0), 0), 0),
+                                                maintenance: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "maintenance" || room?.status == "disconnected" ? 1 : 0), 0), 0),
                                             };
                                             return (
                                                 <BlockCard key={index} block={block?.block} states={blockStates} loading={loaders.getLoading} handleClick={() => handleNavigate(block._id)} />

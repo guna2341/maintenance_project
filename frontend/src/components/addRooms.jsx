@@ -1,6 +1,7 @@
 import { Plus } from "../assets";
 import { Button } from "@heroui/button";
 import { ControlCard } from "./controlCard";
+import { cn } from "@heroui/theme";
 
 export const AddRooms = ({ setRoom, floor, floorId, loading }) => {
 
@@ -24,7 +25,6 @@ export const AddRooms = ({ setRoom, floor, floorId, loading }) => {
 
         );
     }
-
     return (
         <div className='flex flex-col gap-1'>
             <div className='flex items-center justify-between'>
@@ -41,14 +41,25 @@ export const AddRooms = ({ setRoom, floor, floorId, loading }) => {
                         />)
 
                     :
-                    floor?.rooms?.map((room, index) =>
+                    floor?.rooms?.map((room, index) =>(
+                        <div className="flex flex-col items-center gap-2">
+                            <div
+                                className={cn("text-sm",{
+                                    "text-success": room.state == "active" && room.status=="disconnected",
+                                    "text-danger": room.state == "inactive" && room.status=="disconnected",
+                                    "text-warning": room.status=="disconnected" || !room.status
+                                })}
+                            >ROOM ID: {room?.roomId}</div>
                         <ControlCard
                             key={index}
                             edit
+                            connected={room?.status == "connected" ? true : false}
                             state={room?.state}
                             roomName={room?.room}
                             handleClick={() => setRoom(p => ({ ...p, roomId: index, floorId, room: true, roomName: room?.room, issue: room?.issue, state: room?.state, room_Id:room?.roomId }))}
-                        />
+                            />
+                            </div>
+                    )
                     )}
             </div>
         </div>

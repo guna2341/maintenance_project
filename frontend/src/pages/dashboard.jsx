@@ -61,7 +61,7 @@ export const Dashboard = () => {
           />
         </div>
 
-        {!loaders.getLoading && blocks.length === 0 ? (
+        {!loaders.getLoading && blocks?.length === 0 ? (
           <div className='flex flex-col items-center justify-center h-full'>
             <div className='text-center p-8 bg-red-50 border border-red-200 rounded-lg max-w-md'>
               <div className='text-red-600 text-xl mb-2'>⚠️</div>
@@ -85,7 +85,7 @@ export const Dashboard = () => {
           </div>
         ) :
 
-          loaders.getLoading || filteredBlocks.length !== 0 ? (
+          loaders.getLoading || filteredBlocks?.length !== 0 ? (
             <DashboardLayout filteredBlock={filteredBlocks} />
           ) : (
             <div className="w-full flex justify-center mt-8">

@@ -7,21 +7,46 @@ import { Route, Routes } from "react-router-dom";
 import { ProtectRoute, Auth } from "./protectedRoutes";
 import { mqttConnect, mqttDisconnect } from "./services/mqttConnect.js";
 import { AddBlockPage, Dashboard, BlocksDashboard, EditBlockPage, LoginPage, DisplayBlockId } from './pages';
+import { lastWill, lastWillDisconnect } from "./services/lwt.js";
+import { UseDashboardStore } from "./stores/dashboard.js";
+import { NetworkError } from "./pages/networkError.jsx";
 
 // REMOVE BACKEND DELAY
 
 const App = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
+    const handleOnline = UseDashboardStore(state => state.handleOnline);
+    const handleOffline = UseDashboardStore(state => state.handleOffline);
+
     React.useEffect(() => {
         mqttConnect();
+        lastWill();
         return () => {
             mqttDisconnect();
+            lastWillDisconnect();   
         }
+    }, []);
+
+    React.useEffect(() => {
+        if (navigator.onLine) {
+            handleOnline();
+        } else {
+            handleOffline();
+        }
+
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
+        return () => {
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+        };
     }, []);
 
     return (
         <Routes>
             <Route element={<Auth />}>
+                <Route path="/networkError" element={<NetworkError/>} />
                 <Route path={`/${BASE_URL}/login`} element={<LoginPage />} />
                 <Route path="/" element={<LoginPage />} />
                 <Route element={<ProtectRoute />}>

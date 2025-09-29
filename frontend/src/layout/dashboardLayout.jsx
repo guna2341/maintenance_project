@@ -7,12 +7,11 @@ export const DashboardLayout = ({ filteredBlock }) => {
 
     const blocks = UseDashboardStore(e => e.blocks);
     const loaders = UseDashboardStore(e => e.loaders);
-
     const [index, setIndex] = React.useState(0);
     const [height, setHeight] = React.useState(0);
 
     const blockStates = {
-        active: blocks[index]?.floors?.reduce(
+        active: blocks?.[index]?.floors?.reduce(
             (floorSum, floor) =>
                 floorSum +
                 (floor?.rooms?.reduce(
@@ -21,8 +20,8 @@ export const DashboardLayout = ({ filteredBlock }) => {
                 ) || 0),
             0
         ),
-        inactive: blocks[index]?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, item) => roomSum + (item?.state === 'inactive' ? 1 : 0), 0), 0),
-        maintenance: blocks[index]?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, item) => roomSum + (item?.state === 'maintenance' ? 1 : 0), 0), 0),
+        inactive: blocks?.[index]?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, item) => roomSum + (item?.state === 'inactive' && item?.connected ? 1 : 0), 0), 0),
+        maintenance: blocks?.[index]?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, item) => roomSum + (item?.state === 'maintenance' || !item?.connected ? 1 : 0), 0), 0),
     };
 
     return (
@@ -50,22 +49,22 @@ export const DashboardLayout = ({ filteredBlock }) => {
                             style={{ height: height > 0 ? `${height}px` : 'auto' }}
                         >
                             <div className="flex-1 flex flex-col gap-10 pb-2.5 overflow-y-auto scrollbar-thin scrollbar-thumb-custom-300/10 scrollbar-track-transparent">
-                                {blocks[index]?.floors?.map(item => {
+                                {blocks?.[index]?.floors?.map(item => {
                                     const states = {
                                         active: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'active' ? 1 : 0), 0),
-                                        inactive: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'inactive' ? 1 : 0), 0),
-                                        maintenance: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'maintenance' ? 1 : 0), 0)
+                                        inactive: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'inactive' && item?.status != "disconnected" ? 1 : 0), 0),
+                                        maintenance: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'maintenance' || item?.status == "disconnected" ? 1 : 0), 0)
                                     };
                                     return (
                                         <BlockOverview
                                             loading={loaders.getLoading}
                                             key={item?._id}
-                                            blocks={blocks[index]}
-                                            block={`${blocks[index]?.block?.toUpperCase()} - ${item?.block}`}
+                                            blocks={blocks?.[index]}
+                                            block={`${blocks?.[index]?.block?.toUpperCase()} - ${item?.block}`}
                                             states={states}
                                             rooms={item?.rooms}
                                             floorId={item?.floorId}
-                                            blockId={blocks[index]?.blockId}
+                                            blockId={blocks?.[index]?.blockId}
                                         />
                                     )
                                 })}
@@ -76,7 +75,7 @@ export const DashboardLayout = ({ filteredBlock }) => {
                             <Analytics
                                 key={index}
                                 states={blockStates}
-                                block={blocks[index]}
+                                block={blocks?.[index]}
                                 index={index}
                                 onHeightChange={e => setHeight(e)} />
                         </div>
@@ -90,15 +89,15 @@ export const DashboardLayout = ({ filteredBlock }) => {
                         <div className="flex-1.5 w-full sm:max-w-[400px] flex flex-col">
                             <Analytics
                                 key={index}
-                                states={blocks[index]?.states}
-                                block={blocks[index]}
+                                states={blocks?.[index]?.states}
+                                block={blocks?.[index]}
                                 onHeightChange={e => setHeight(e)} />
                         </div>
-                        {blocks[index]?.floors?.map(item => (
+                        {blocks?.[index]?.floors?.map(item => (
                             <BlockOverview
                                 key={item?._id}
                                 loading={loaders.getLoading}
-                                block={`${blocks[index].block.toUpperCase()} - ${item?.block}`}
+                                block={`${blocks?.[index].block.toUpperCase()} - ${item?.block}`}
                                 states={blockStates}
                                 rooms={item?.rooms}
                             />

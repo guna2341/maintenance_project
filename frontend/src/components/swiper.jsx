@@ -53,7 +53,7 @@ export const SwiperComponent = (
                                 (sum, floor) =>
                                     sum +
                                     (floor?.rooms?.reduce(
-                                        (roomSum, room) => roomSum + (room?.state === "inactive" ? 1 : 0),
+                                        (roomSum, room) => roomSum + (room?.state === "inactive" && room?.status != "disconnected" ? 1 : 0),
                                         0
                                     ) || 0),
                                 0
@@ -62,7 +62,7 @@ export const SwiperComponent = (
                                 (sum, floor) =>
                                     sum +
                                     (floor?.rooms?.reduce(
-                                        (roomSum, room) => roomSum + (room?.state === "maintenance" ? 1 : 0),
+                                        (roomSum, room) => roomSum + (room?.state === "maintenance" ? 1 : 0) || (room?.status == "connected" ? 0 : 1),
                                         0
                                     ) || 0),
                                 0

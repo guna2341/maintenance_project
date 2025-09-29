@@ -11,33 +11,45 @@ const getBlocks = async (req, res) => {
   }
 };
 
-const addBlocks = async (req, res) => {
-  try {
-    const { block } = req.body;
+  const addBlocks = async (req, res) => {
+    try {
+      const { block } = req.body;
+      const exists = await blockModel.findOne({ blockId: block.blockId });
 
-    if (!block) {
-      return res.status(400).json({ message: "Block data is required" });
+      if (!block) {
+        return res.status(400).json({ message: "Block data is required" });
+      }
+
+      if (exists) {
+        return res.status(409).json({ message: "Block already exists" });
+      }
+
+      const processedBlock = {
+        ...block,
+        floors: (block.floors || []).map((floor) => ({
+          ...floor,
+          rooms: floor.rooms || [], 
+        })),
+      };
+
+      const newBlock = await blockModel.create(processedBlock);
+
+      setTimeout(() => {
+        return res
+          .status(200)
+          .json({ data: newBlock, message: "Block added successfully" });
+      }, 2000);
+    } catch (err) {
+      if (err.code === 11000) {
+        return res.status(409).json({
+          message: `Duplicate key error: ${Object.keys(
+            err.keyValue
+          )} "${Object.values(err.keyValue)}" already exists`,
+        });
+      }
+      return res.status(500).json({ message: err.message });
     }
-
-    const processedBlock = {
-      ...block,
-      floors: (block.floors || []).map((floor) => ({
-        ...floor,
-        rooms: floor.rooms || [], 
-      })),
-    };
-
-    const newBlock = await blockModel.create(processedBlock);
-
-    setTimeout(() => {
-      return res
-        .status(200)
-        .json({ data: newBlock, message: "Block added successfully" });
-    }, 2000);
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
-  }
-};
+  };
 
 
 const editBlocks = async (req, res) => {
@@ -57,7 +69,7 @@ const editBlocks = async (req, res) => {
 
     if (!updatedBlock) {
       return res.status(404).json({ message: "Block not found" });
-    }
+    } 
 
     return res.status(200).json({
       success: true,
@@ -65,6 +77,13 @@ const editBlocks = async (req, res) => {
       message: "Block updated successfully",
     });
   } catch (err) {
+    if (err.code === 11000) {
+      return res.status(409).json({
+        message: `Duplicate key error: ${Object.keys(
+          err.keyValue
+        )} "${Object.values(err.keyValue)}" already exists`,
+      });
+    }
     return res.status(500).json({ message: err.message });
   }
 };

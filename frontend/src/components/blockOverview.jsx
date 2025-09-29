@@ -59,6 +59,7 @@ export const BlockOverview = (
                     <p
                     className='text-custom-300 font-medium font-poppins text-base'
                     >Room Controls</p>
+
                     {loading ?
                         <div className='flex flex-wrap items-center gap-2.5 gap-y-4.5 w-full overflow-auto'>
                             {Array(6).fill(null).map((item,index) => (
@@ -72,6 +73,7 @@ export const BlockOverview = (
                             {rooms?.map((item,index) => (
                                 <ControlCard
                                     key={index}
+                                    connected={item?.status == "connected" ? true : false}
                                     handleClick={(e) => handleBlock(item?.roomId,e)}
                                     loading={loading}
                                     state={item?.state}

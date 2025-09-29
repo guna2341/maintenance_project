@@ -7,7 +7,6 @@ const cors = require("cors");
 
 // initialize app
 const app = express();
-
 // cors
 app.use(cors({
     origin: "*"
@@ -23,10 +22,10 @@ const api = process.env.API_URL;
 const port = process.env.PORT;
 
 // services
-const { connectMqtt, publishMessage } = require("./services/mqtt");
-const { mockIOT } = require("./services/mockIot");
+const { connectMqtt } = require("./services/mqtt");
+const { lastWill } = require("./services/lwt");
 connectMqtt();
-mockIOT();
+lastWill();
 
 // database
 const database = require("./config/db");
@@ -36,10 +35,6 @@ database();
 const blockRoutes = require("./routes/blockRoute");
 const loginRoutes = require("./routes/loginRoutes");
 const statusRoute = require("./routes/statusRoute");
-
-app.use("/test",(req,res) => {
-    publishMessage("AcerDevices/block/floor/room/status","ON");
-});
 
 // mount router
 app.use(`/${api}/blocks`, blockRoutes);
