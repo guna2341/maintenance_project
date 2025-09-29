@@ -41,14 +41,13 @@ const connectMqtt = async () => {
       msg = JSON.parse(msg);
 
       // publish status again on device connect
-        if (msg?.status == "device connected" || msg?.status == "device disconnected") {
-          console.log(msg?.status);
+        if (msg?.status == "device connected" || msg?.status == "device disconnected" || devices[index] == "ON") {
+
             await blockModel.updateOne(
                     { blockId },
                     {
                       $set: {
-                        "floors.$[floor].rooms.$[room].status": "connected"
-                      },
+                        "floors.$[floor].rooms.$[room].status": "connected"                      },
                     },
                     {
                       arrayFilters: [
@@ -58,8 +57,8 @@ const connectMqtt = async () => {
                     }
                   );
         }
-        const deviceState = await getDeviceState(blockId, floorId, roomId);
-        if (client && msg?.status == "device connected" && deviceState.state == "inactive" || deviceState.state == "maintenance") {
+      const deviceState = await getDeviceState(blockId, floorId, roomId);
+      if (client && msg?.status == "device connected" && (deviceState.state == "inactive" || devices[index] == "ON")) {
           let payload = { deviceId: `${index}`, command: "ON" };
           console.log(`devices/${index}/control`);
           client.publish(`devices/${index}/control`, JSON.stringify(payload));

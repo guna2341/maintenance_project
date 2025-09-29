@@ -4,8 +4,16 @@ import endpoints from "../api/config/endpoints";
 import { UseDashboardStore } from "./index";
 
 export const UseAddBlocksStore = create((set, get) => ({
+  blocks: { block: "", blockId: "", floors: [] },
   loaders: {
     addLoading: false,
+  },
+
+  resetBlocks: () => { 
+    set({ blocks: { block: "", blockId: "", floors: [] } });
+  },
+  setBlock: (block) => { 
+    set({ blocks: block });
   },
   addBlocks: async (block) => {
     const currentState = UseDashboardStore.getState();

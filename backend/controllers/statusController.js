@@ -9,9 +9,12 @@ const switchStatus = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
     const index = `${blockId}/${floorId}/${roomId}`;
+
+    // for testing
     // const index = "SF-1";
     const topic = `devices/${index}/control`;
-    devices[index] = status == "active" ? "ON" : "OFF";
+    // devices[index] = status == "active" ? "ON" : "OFF";
+    
   const payload = JSON.stringify({
      deviceId: `${index}`,
      command: status === "active" ? "ON" : "OFF",

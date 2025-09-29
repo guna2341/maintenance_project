@@ -29,13 +29,15 @@ export const EditBlockPage = () => {
   const [deleteBlockModel, setDeleteBlockModel] = React.useState(false);
   const [floor, setFloor] = React.useState({ id: -1, floor: false, floorName: "", floor_Id: "" });
   const [deleteModal, setDeleteModal] = React.useState({ delete: false, floorId: -1, type: "floor" });
-  const [room, setRoom] = React.useState({ roomId: -1, floorId: -1, room: false, roomName: "", issue: "", state: "active", room_Id:"" });
+  const [room, setRoom] = React.useState({ roomId: -1, floorId: -1, room: false, roomName: "", issue: "", state: "active", room_Id: "" });
 
+  
   React.useEffect(() => {
     const currentBlock = blocks.find(item => item._id === id);
     setBlock(currentBlock ?? []);
   }, [blocks]);
-
+  
+  console.log(block);
   function handleBack() {
     nav("../displayBlocks");
   }
@@ -88,7 +90,7 @@ export const EditBlockPage = () => {
         if (fIndex === room.floorId) {
           return {
             ...floor,
-            rooms: [...floor.rooms, { roomId:data.room_Id,room: data.room, state: data?.state || "active", issue: data?.issue }]
+            rooms: [...floor.rooms, { roomId: data.room_Id, room: data.room, state: data?.state || "active", issue: data?.issue, status: "disconnected" }]
           };
         }
         return floor;
@@ -108,7 +110,7 @@ export const EditBlockPage = () => {
               if (index === room.roomId) {
                 return {
                   ...item,
-                  roomId:data.room_Id,
+                  roomId: data.room_Id,
                   room: data.room,
                   state: data?.state || "inactive",
                   issue: data?.issue
@@ -129,10 +131,9 @@ export const EditBlockPage = () => {
     setRoom(p => ({ ...p, roomId: -1, floorId: -1 }))
   }
   function handleNewFloor(e) {
-    console.log
     const newFloor = {
       block: e.floorName,
-      floorId:e.floor_Id,
+      floorId: e.floor_Id,
       rooms: []
     };
     const newBlock = {
@@ -150,7 +151,7 @@ export const EditBlockPage = () => {
           return {
             ...item,
             block: e.floorName,
-            floorId:e.floor_Id
+            floorId: e.floor_Id
           }
         }
         else {
@@ -168,7 +169,7 @@ export const EditBlockPage = () => {
     handleEditFloor(e);
     setFloor(p => ({ ...p, floor: false, id: -1 }));
   }
-    function handleRoom(e) {
+  function handleRoom(e) {
 
     if (e.type == "delete") {
       deleteRooms();
@@ -319,18 +320,18 @@ export const EditBlockPage = () => {
               <div className='p-4 rounded-lg flex flex-col gap-4 h-full'>
                 <div className='flex flex-col gap-2'>
                   <div className='flex items-center w-full justify-between'>
-                  <p className='text-lg font-medium font-poppins text-custom-300'>Block ID <span className='text-danger'>*</span></p>
-                  <div className='flex items-center gap-2'>
-                    <Button color='danger' variant='bordered'
-                      loading={deleteLoading}
-                      onPress={() => setDeleteBlockModel(true)}
-                    >Delete</Button>
-                    <Button
-                      color='primary'
-                      isLoading={loading}
-                      onPress={handleSave}
-                    >Save</Button>
-                  </div>
+                    <p className='text-lg font-medium font-poppins text-custom-300'>Block ID <span className='text-danger'>*</span></p>
+                    <div className='flex items-center gap-2'>
+                      <Button color='danger' variant='bordered'
+                        loading={deleteLoading}
+                        onPress={() => setDeleteBlockModel(true)}
+                      >Delete</Button>
+                      <Button
+                        color='primary'
+                        isLoading={loading}
+                        onPress={handleSave}
+                      >Save</Button>
+                    </div>
                   </div>
                   <InputComponent
                     isRequired
@@ -344,7 +345,7 @@ export const EditBlockPage = () => {
                   />
                   <div className='flex items-center justify-between w-full'>
                     <p className='text-lg font-medium font-poppins text-custom-300'>Block Name <span className='text-danger'>*</span></p>
-                    
+
                   </div>
                   <InputComponent
                     isRequired
@@ -381,11 +382,17 @@ export const EditBlockPage = () => {
                           key={index}
                           index={index}
                           title={
-                            <div className='flex px-4 items-center font-medium font-poppins text-custom-300 gap-2 justify-between cursor-pointer'><div>{floor?.block}</div>
-                              <div></div>
+                            <div className='flex px-4 items-center font-medium font-poppins text-custom-300 gap-2 justify-between cursor-pointer'>
+                              <div className='flex flex-col items-start'>
+                              <div>Floor ID: {floor?.floorId}</div>
+                              <div>Floor Name: {floor?.block}</div>
+                            </div>
+
                               <div className='flex items-center gap-3'>
-                                <span onClick={() => setFloor(p => ({ ...p, floor: true, id: index, floor_Id:floor.floorId,
-                               floorName: floor.block }))}>
+                                <span onClick={() => setFloor(p => ({
+                                  ...p, floor: true, id: index, floor_Id: floor.floorId,
+                                  floorName: floor.block
+                                }))}>
                                   <Edit />
                                 </span>
                                 <span onClick={() => setDeleteModal(p => ({ ...p, delete: true, floorId: index, type: "floor" }))}>
@@ -411,20 +418,23 @@ export const EditBlockPage = () => {
       </Card>
       <AddRoomModal
         isOpen={room.room}
+        block={block}
+        floorId={room.floorId}
         roomName={room.roomName}
         room_Id={room.room_Id}
         roomIssue={room?.issue}
         roomState={room?.state}
         edit={room.roomId != -1}
-        onClose={() => setRoom(p => ({ ...p, room: false, roomId: -1, floorId: -1, roomName: "", issue: "", room_Id:"" }))}
+        onClose={() => setRoom(p => ({ ...p, room: false, roomId: -1, floorId: -1, roomName: "", issue: "", room_Id: "" }))}
         handleConfirm={handleRoom}
       />
       <AddFloor
+        block={block}
         isOpen={floor.floor}
         floor_Id={floor.floor_Id}
         floorName={floor.floorName}
         edit={floor.id != -1}
-        onClose={() => setFloor(p => ({ ...p, floor: false, id: -1, floorName: "", floor_Id:"" }))}
+        onClose={() => setFloor(p => ({ ...p, floor: false, id: -1, floorName: "", floor_Id: "" }))}
         handleFloor={handleFloor}
       />
       <DeleteModal

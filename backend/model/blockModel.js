@@ -1,24 +1,25 @@
 const { default: mongoose } = require("mongoose");
 
 const roomSchema = new mongoose.Schema({
-  roomId:String,
+  roomId: { type: String, required: true },
   room: { type: String, required: true },
   state: String,
   issue: String,
   status: {
-    type:String,
-    default:"disconnected",
-    enum: ["connected", "disconnected"]
-  }});
+    type: String,
+    default: "disconnected",
+    enum: ["connected", "disconnected"],
+  },
+});
 
 const floorSchema = new mongoose.Schema({
-  floorId:String,
+  floorId: { type: String, required: true },
   block: String,
   rooms: [roomSchema],
 });
 
 const BlockSchema = new mongoose.Schema({
-  blockId:String,
+  blockId: { type: String, required: true },
   block: String,
   floors: [floorSchema],
 });

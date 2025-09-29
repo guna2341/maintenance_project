@@ -42,7 +42,8 @@ const lastWill = async () => {
           { blockId },
           {
             $set: {
-              "floors.$[floor].rooms.$[room].status": "disconnected"
+              "floors.$[floor].rooms.$[room].status": "disconnected",
+              "floors.$[floor].rooms.$[room].state": "inactive",
             },
           },
           {

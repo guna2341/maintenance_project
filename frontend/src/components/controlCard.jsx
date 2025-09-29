@@ -55,7 +55,7 @@ export const ControlCard = ({
   return (
     <div
       onClick={handleSwitch}
-      className={cn('border rounded-lg bg-white flex flex-col gap-4 justify-between items-center w-full max-w-[179px] py-2.5 px-3.5 cursor-pointer', {
+      className={cn('border rounded-lg bg-white flex flex-col gap-4 justify-between items-center w-full w-[179px] py-2.5 px-3.5 cursor-pointer', {
         'border-custom-500': !switchState,
         'border-custom-400': switchState,
         "border-custom-200 cursor-auto": !connected

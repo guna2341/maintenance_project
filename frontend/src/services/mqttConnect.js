@@ -26,14 +26,16 @@ export const mqttConnect = () => {
     console.log(topic + " " + message.toString());
     UseSwitchStore.setState({ loading: false });
     const store = UseSwitchStore.getState();
-    const blocks = UseDashboardStore.getState().blocks;
     try {
       const msg = JSON.parse(message.toString());
       const parts = topic.split("/");
       const blockId = parts[1];
       const floorId = parts[2];
       const roomId = parts[3];
-      if (msg?.status == "device connected" || msg?.status == "device disconnected") {
+      if (
+        msg?.status == "device connected" ||
+        msg?.status == "device disconnected"
+      ) {
         const deviceState = msg?.status == "device connected" ? "connected" : "disconnected";
         UseDashboardStore.setState((prev) => {
           const updatedBlocks = prev.blocks.map((block) => {
@@ -49,8 +51,8 @@ export const mqttConnect = () => {
                   rooms: floor.rooms.map((room) =>
                     room.roomId === roomId
                       ? {
-                          ...room,
-                          status: deviceState
+                        ...room,
+                          status: deviceState,
                         }
                       : room
                   ),
@@ -68,6 +70,7 @@ export const mqttConnect = () => {
         return;
       }
       message = message.toString();
+      console.log(message);
       const response = store.switchState(
         blockId,
         floorId,
@@ -89,7 +92,7 @@ export const mqttConnect = () => {
 
 export const mqttDisconnect = () => {
   if (mqttClient) {
-    console.log("🔌 Disconnecting MQTT client...");
+    console.log("Disconnecting MQTT client...");
     mqttClient.removeAllListeners();
     mqttClient = null;
   }

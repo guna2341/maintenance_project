@@ -1,8 +1,10 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom';
+import { UseDashboardStore } from '../stores';
+import { NetworkError } from '../pages/networkError';
 
 export const Auth = () => {
-
+  const online = UseDashboardStore(state => state.networkError);
   React.useEffect(() => {
     const handleStorage = (event) => {
       if (event.key === "auth" && event.newValue === null) {
@@ -28,5 +30,10 @@ export const Auth = () => {
   const logout = () => {
     window.location.href = "/login";
   };
-  return <Outlet />;
+  if (!online) {
+    return <NetworkError />;
+  }
+  else {
+    return <Outlet />;
+  }
 }

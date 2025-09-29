@@ -24,7 +24,6 @@ const getDeviceState = async (blockId, floorId, roomId) => {
     // Extract matched room
     const room = floor.rooms.find((r) => r.roomId === roomId);
     if (!room) return null;
-
     return {
       state: room.state,
       status: room.status,
