@@ -25,8 +25,9 @@ const getDeviceState = async (blockId, floorId, roomId) => {
     const room = floor.rooms.find((r) => r.roomId === roomId);
     if (!room) return null;
     return {
-      state: room.state,
-      status: room.status,
+      state: room?.state,
+      status: room?.status,
+      previousState: room?.previousState
     };
   } catch (err) {
     console.error("Error fetching device state:", err);

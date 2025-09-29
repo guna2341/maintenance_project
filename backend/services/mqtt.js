@@ -39,15 +39,15 @@ const connectMqtt = async () => {
     try {
       msg = message.toString();
       msg = JSON.parse(msg);
-
       // publish status again on device connect
         if (msg?.status == "device connected" || msg?.status == "device disconnected" || devices[index] == "ON") {
-
-            await blockModel.updateOne(
+          console.log(`${topic} : ${message.toString()}`);  
+          await blockModel.updateOne(
                     { blockId },
                     {
                       $set: {
-                        "floors.$[floor].rooms.$[room].status": "connected"                      },
+                        "floors.$[floor].rooms.$[room].status": "connected"
+                      },
                     },
                     {
                       arrayFilters: [
@@ -56,11 +56,11 @@ const connectMqtt = async () => {
                       ],
                     }
                   );
-        }
+      }
       const deviceState = await getDeviceState(blockId, floorId, roomId);
-      if (client && msg?.status == "device connected" && (deviceState.state == "inactive" || devices[index] == "ON")) {
+      if (client && msg?.status == "device connected" && (deviceState.previousState == "active" || devices[index] == "ON")) {
           let payload = { deviceId: `${index}`, command: "ON" };
-          console.log(`devices/${index}/control`);
+          console.log(`published: devices/${index}/control`);
           client.publish(`devices/${index}/control`, JSON.stringify(payload));
           return;
         }
@@ -72,7 +72,11 @@ const connectMqtt = async () => {
       await blockModel.updateOne(
         { blockId },
         {
-          $set: { "floors.$[floor].rooms.$[room].state": state },
+          $set: {
+            "floors.$[floor].rooms.$[room].state": state,
+            "floors.$[floor].rooms.$[room].previousState": state,
+            
+           },
         },
         {
           arrayFilters: [

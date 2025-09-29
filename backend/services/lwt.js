@@ -9,7 +9,7 @@ const lastWill = async () => {
   const client = mqtt.connect(brokerUrl);
 
   client.on("connect", () => {
-    console.log("✅ Connected to MQTT broker");
+    console.log("✅ Connected to lastwill MQTT broker");
 
     // subscribe to will
     client.subscribe("devices/+/+/+/lastwill", (err) => {
@@ -55,7 +55,7 @@ const lastWill = async () => {
         );
       };
 
-      console.log(`Updated DB: block ${blockId}, floor ${floorId}, room ${roomId}`);
+      console.log(`${topic} : ${message.toString()}`);
 
     } catch (err) {
       console.log(err);

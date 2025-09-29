@@ -1,5 +1,4 @@
 const { publishMessage } = require("../services/mqtt");
-const { ack, devices } = require("../sharedState");
 
 const switchStatus = async (req, res) => {
   try {
@@ -14,7 +13,7 @@ const switchStatus = async (req, res) => {
     // const index = "SF-1";
     const topic = `devices/${index}/control`;
     // devices[index] = status == "active" ? "ON" : "OFF";
-    
+    console.log(topic);
   const payload = JSON.stringify({
      deviceId: `${index}`,
      command: status === "active" ? "ON" : "OFF",

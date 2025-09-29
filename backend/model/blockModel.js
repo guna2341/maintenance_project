@@ -4,6 +4,7 @@ const roomSchema = new mongoose.Schema({
   roomId: { type: String, required: true },
   room: { type: String, required: true },
   state: String,
+  previousState:String,
   issue: String,
   status: {
     type: String,
