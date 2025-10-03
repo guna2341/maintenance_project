@@ -33,8 +33,8 @@ export const BlockOverview = (
         }
     }; 
     return (
-        <div className='border w-full border-black/15 border-l-0 bg-custom-100 rounded-lg text-custom-300'>
-            <div className='border-l-3 border-custom-200 rounded-[6px] py-2.5 px-6 flex flex-col gap-5'>
+        <div className='border w-full border-black/15 border-l-3 border-l-custom-200 bg-custom-100 rounded-lg text-custom-300'>
+            <div className=' rounded-[6px] py-2.5 px-6 flex flex-col gap-5'>
                 <BlockHeader
                     loading={loading}
                     block={block}

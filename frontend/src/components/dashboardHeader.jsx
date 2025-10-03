@@ -8,6 +8,11 @@ export const DashboardHeader = ({ onChange, search, loading }) => {
                 Blocks
             </p>
             <div>
+                <div><span className='h-2 w-2 rounded-full'></span></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div>
                 <InputComponent
                     isReadOnly={loading}
                     value={search}
