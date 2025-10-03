@@ -51,7 +51,7 @@ export const Dashboard = () => {
   }, [blocks, search]);
 
   return (
-    <div className='w-full h-[calc(100%-200px)] p-[20px] pb-2 pt-4 flex flex-col gap-4'>
+    <div className='w-full h-[calc(100%-200px)] p-[20px] scrollbar-hide pb-2 pt-4 flex flex-col gap-4'>
       <div className='h-[calc(100%-30px)]'>
         <div>
           <DashboardHeader

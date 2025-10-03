@@ -11,11 +11,11 @@ export const MainLayout = () => {
   }
 
   return (
-    <div className='flex h-screen flex-col'>
+    <div className='flex h-screen flex-col !scrollbar-hide'>
       <Appbar />
       <div className='h-full w-full flex'>
         <SideBar />
-        <main className="flex-1 overflow-auto p-4 w-full scrollbar-thin">
+        <main className="flex-1 overflow-auto p-4 pr-0 w-full !crollbar-hide">
           <Outlet />
         </main>
       </div>

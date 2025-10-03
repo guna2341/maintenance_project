@@ -229,7 +229,7 @@ export const AddBlockPage = () => {
         </span>
         <h1 className='text-xl font-poppins font-medium text-center text-custom-300'>Add Block</h1>
       </div>
-      <Card className='h-full'>
+      <Card className='h-full border-l-3 border-custom-200'>
         <CardBody
           className='bg-custom-150/50 h-full'
         >

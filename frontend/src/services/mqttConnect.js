@@ -13,14 +13,53 @@ export const mqttConnect = () => {
   if (!mqttClient) mqttClient = mqtt.connect(brokerURL);
 
   mqttClient.on("connect", () => {
-    console.log("✅ Connected to MQTT broker");
+    addToast({
+      title: "Broker connected",
+      description: "MQTT broker connected successfully",
+      color: "success",
+    });
+    UseDashboardStore.setState({ broker: true });
     mqttClient.subscribe(`devices/+/+/+/status`, (err) => {
       if (!err) {
-        UseDashboardStore.setState({ broker: true });
         console.log("Subscribed to devices/+/+/+/status", sub);
       }
     });
   });
+
+  mqttClient.on("offline", () => {
+    console.log("⚠️ MQTT broker went offline");
+    UseDashboardStore.setState({ broker: false });
+    addToast({
+      title: "Connection Lost",
+      description: "MQTT broker disconnected unexpectedly",
+      color: "danger",
+    });
+  });
+
+  mqttClient.on("disconnect", () => {
+    console.log("🔌 Disconnected from MQTT broker");
+    UseDashboardStore.setState({ broker: false });
+  });
+
+  mqttClient.on("error", (error) => {
+    console.error("❌ MQTT connection error:", error);
+    UseDashboardStore.setState({ broker: false });
+    addToast({
+      title: "Connection Error",
+      description: "Failed to connect to MQTT broker",
+      color: "danger",
+    });
+  });
+
+  mqttClient.on("reconnect", () => {
+    console.log("🔄 Attempting to reconnect to MQTT broker...");
+    addToast({
+      title: "Reconnecting",
+      description: "Attempting to reconnect to broker...",
+      color: "warning",
+    });
+  });
+
   mqttClient.removeAllListeners("message");
   mqttClient.on("message", (topic, message) => {
     console.log(topic + " " + message.toString());
@@ -36,7 +75,8 @@ export const mqttConnect = () => {
         msg?.status == "device connected" ||
         msg?.status == "device disconnected"
       ) {
-        const deviceState = msg?.status == "device connected" ? "connected" : "disconnected";
+        const deviceState =
+          msg?.status == "device connected" ? "connected" : "disconnected";
         UseDashboardStore.setState((prev) => {
           const updatedBlocks = prev.blocks.map((block) => {
             if (block.blockId !== blockId) return block;
@@ -51,7 +91,7 @@ export const mqttConnect = () => {
                   rooms: floor.rooms.map((room) =>
                     room.roomId === roomId
                       ? {
-                        ...room,
+                          ...room,
                           status: deviceState,
                         }
                       : room
@@ -94,6 +134,8 @@ export const mqttDisconnect = () => {
   if (mqttClient) {
     console.log("Disconnecting MQTT client...");
     mqttClient.removeAllListeners();
+    mqttClient.end();
     mqttClient = null;
+    UseDashboardStore.setState({ broker: false });
   }
 };
