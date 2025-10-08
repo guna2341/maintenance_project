@@ -37,7 +37,6 @@ export const EditBlockPage = () => {
     setBlock(currentBlock ?? []);
   }, [blocks]);
   
-  console.log(block);
   function handleBack() {
     nav("../displayBlocks");
   }
@@ -70,6 +69,19 @@ export const EditBlockPage = () => {
     }
     getData();
   }, []);
+
+  function handleBlockId(e) {
+    const hasHyphen = /\//.test(e.target.value);
+    const newBlock = { ...block, blockId: e.target.value }
+    setBlock(newBlock);
+    if (hasHyphen) {
+      setErr(p => ({ ...p, id: "Id cannot contain slashes" }));
+    }
+    else {
+      setErr(p => ({ ...p, id: "" }));
+    }
+  }
+
 
   async function handleDelete() {
     const response = await deleteBlock(id);
@@ -236,7 +248,7 @@ export const EditBlockPage = () => {
   }
 
   return (
-    <div className='h-full pt-10 p-2 px-12 flex flex-col gap-7 font-poppins'>
+    <div className='h-full pt-10 p-4 px-12 flex flex-col gap-7 font-poppins'>
       <div className='flex items-center gap-8'>
         <span className='cursor-pointer' onClick={handleBack}>
           <BackArrow />
@@ -337,7 +349,9 @@ export const EditBlockPage = () => {
                     isRequired
                     autofocus
                     value={block?.blockId}
-                    onchange={e => setBlock(p => ({ ...p, blockId: e.target.value }))}
+                    isInvalid={!!err.id}
+                    errorMessage={err.id}
+                    onchange={handleBlockId}
                     placeholder={"Eg:CB101"}
                     classname={{
                       inputWrapper: "bg-white border border-gray-300",

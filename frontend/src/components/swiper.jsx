@@ -1,4 +1,3 @@
-import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/free-mode';
@@ -44,7 +43,7 @@ export const SwiperComponent = (
                                 (sum, floor) =>
                                     sum +
                                     (floor?.rooms?.reduce(
-                                        (roomSum, room) => roomSum + (room?.state === "active" ? 1 : 0),
+                                        (roomSum, room) => roomSum + (room?.state === "active" && room?.status != "disconnected" ? 1 : 0),
                                         0
                                     ) || 0),
                                 0
@@ -62,7 +61,7 @@ export const SwiperComponent = (
                                 (sum, floor) =>
                                     sum +
                                     (floor?.rooms?.reduce(
-                                        (roomSum, room) => roomSum + (room?.state === "maintenance" ? 1 : 0) || (room?.status == "connected" ? 0 : 1),
+                                        (roomSum, room) => roomSum + (room?.state === "maintenance" || room?.status == "disconnected" ? 1 : 0),
                                         0
                                     ) || 0),
                                 0

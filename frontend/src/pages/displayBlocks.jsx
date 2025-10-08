@@ -37,9 +37,9 @@ export const BlocksDashboard = () => {
 
     const states = [
         { key: "total", label: "total", cardName: "Total Blocks", length: blocks.length },
-        { key: "active", label: "active", cardName: "Active rooms", length: allRooms.filter(r => r?.state === "active").length },
-        { key: "inactive", label: "inactive", cardName: "Inactive rooms", length: allRooms.filter(r => r?.state === "inactive").length },
-        { key: "maintenance", label: "maintenance", cardName: "Maintenance rooms", length: allRooms.filter(r => r?.state === "maintenance").length },
+        { key: "active", label: "active", cardName: "Active rooms", length: allRooms.filter(r => r?.state === "active" && r?.status != "disconnected").length },
+        { key: "inactive", label: "inactive", cardName: "Inactive rooms", length: allRooms.filter(r => r?.state === "inactive" && r?.status != "disconnected").length },
+        { key: "maintenance", label: "maintenance", cardName: "Maintenance rooms", length: allRooms.filter(r => r?.state === "maintenance" || r?.status == "disconnected").length },
     ];
 
     function handleNavigate(id) {
@@ -76,7 +76,7 @@ export const BlocksDashboard = () => {
     }, []);
 
     return (
-        <div className="h-[calc(100%-240px)] bg-white p-2">
+        <div className="h-[calc(100%-240px)] bg-white p-6">
             <div className="max-w-7xl mx-auto h-full">
                 <DisplayHeader
                     searchTerm={searchTerm}
@@ -131,7 +131,7 @@ export const BlocksDashboard = () => {
                                         :
                                         currentBlocks.map((block, index) => {
                                             const blockStates = {
-                                                active: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "active" ? 1 : 0), 0), 0),
+                                                active: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "active" && room?.status != "disconnected"  ? 1 : 0), 0), 0),
                                                 inactive: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "inactive" && room?.status != "disconnected" ? 1 : 0), 0), 0),
                                                 maintenance: block?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, room) => roomSum + (room?.state === "maintenance" || room?.status == "disconnected" ? 1 : 0), 0), 0),
                                             };

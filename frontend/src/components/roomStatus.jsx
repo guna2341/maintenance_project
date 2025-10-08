@@ -34,13 +34,13 @@ export const RoomStatus = ({
                 <div className='flex flex-wrap gap-y-4 gap-x-4 mt-4'>
                     {allRooms.map((room, index) => (
                         <div
-                            key={room._id}
+                            key={room?._id}
                             className={cn(
                                 'px-1.5 py-0.5 min-w-[10px] aspect-[4/4] rounded-full text-white text-md flex items-center justify-center',
                                 {
-                                    'bg-custom-400': room.state === 'active',
-                                    'bg-custom-500': room.state === 'inactive',
-                                    'bg-custom-200': room.state === 'maintenance',
+                                    'bg-custom-400': room?.state === 'active',
+                                    'bg-custom-500': room?.state === 'inactive',
+                                    'bg-custom-200': room?.state === 'maintenance' || room?.status == "disconnected",
                                 }
                             )}
                         >

@@ -172,11 +172,11 @@ export const AddBlockPage = () => {
   }
 
   function handleBlockId(e) {
-    const hasHyphen = /-/.test(e.target.value);
+    const hasHyphen = /\//.test(e.target.value);
     const newBlock = {...block,blockId:e.target.value}
     setBlocks(newBlock);
     if (hasHyphen) {
-      setErr(p => ({...p,id:"Id cannot contain hyphen"}));
+      setErr(p => ({...p,id:"Id cannot contain slashes"}));
     }
     else {
       setErr(p => ({...p,id:""}));
@@ -222,7 +222,7 @@ export const AddBlockPage = () => {
   }, []);
 
   return (
-    <div className='h-full pt-10 p-2 px-12 flex flex-col gap-7 font-poppins'>
+    <div className='h-full pt-10 p-4 px-12 flex flex-col gap-7 font-poppins'>
       <div className='flex items-center gap-8'>
         <span className='cursor-pointer' onClick={handleBack}>
           <BackArrow />

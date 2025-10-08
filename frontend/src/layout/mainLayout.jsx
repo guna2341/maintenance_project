@@ -15,7 +15,7 @@ export const MainLayout = () => {
       <Appbar />
       <div className='h-full w-full flex'>
         <SideBar />
-        <main className="flex-1 overflow-auto p-4 pr-0 w-full !crollbar-hide">
+        <main className="flex-1 overflow-auto pr-0 w-full !scrollbar-hide">
           <Outlet />
         </main>
       </div>
