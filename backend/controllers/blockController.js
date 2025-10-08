@@ -3,9 +3,7 @@ const blockModel = require("../model/blockModel");
 const getBlocks = async (req, res) => {
   try {
     const blocks = await blockModel.find();
-    setTimeout(() => {
       return res.status(200).json({blocks});
-    }, 3000);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
