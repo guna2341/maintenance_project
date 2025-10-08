@@ -1,4 +1,4 @@
-const blockModel = require("./models/blockModel");
+const blockModel = require("../model/blockModel");
 
 const ResetDb = async () => {
   try {

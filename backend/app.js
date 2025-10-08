@@ -7,6 +7,7 @@ const cors = require("cors");
 
 // initialize app
 const app = express();
+
 // cors
 app.use(cors({
     origin: "*"
@@ -24,8 +25,10 @@ const port = process.env.PORT;
 // services
 const { connectMqtt } = require("./services/mqtt");
 const { lastWill } = require("./services/lwt");
+// const { ResetDb } = require("./services/clearDb");
 connectMqtt();
 lastWill();
+// ResetDb();
 
 // database
 const database = require("./config/db");

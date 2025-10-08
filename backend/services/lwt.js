@@ -35,7 +35,6 @@ const lastWill = async () => {
       const blockId = parts[1];
       const floorId = parts[2];
       const roomId = parts[3];
-
       // set state
       if (msg?.status == "device disconnected") {
         await blockModel.updateOne(

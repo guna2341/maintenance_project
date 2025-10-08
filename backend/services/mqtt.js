@@ -40,33 +40,34 @@ const connectMqtt = async () => {
       msg = message.toString();
       msg = JSON.parse(msg);
       // publish status again on device connect
-        if (msg?.status == "device connected" || msg?.status == "device disconnected" || devices[index] == "ON") {
-          console.log(`${topic} : ${message.toString()}`);  
+      console.log(msg)
+      if (msg?.status == "device connected") {
+          console.log(msg.status)
           await blockModel.updateOne(
-                    { blockId },
-                    {
-                      $set: {
-                        "floors.$[floor].rooms.$[room].status": "connected"
-                      },
-                    },
-                    {
-                      arrayFilters: [
-                        { "floor.floorId": floorId },
-                        { "room.roomId": roomId },
-                      ],
-                    }
-                  );
-      }
+            { blockId },
+            {
+              $set: {
+                "floors.$[floor].rooms.$[room].status": "connected",
+              },
+            },
+            {
+              arrayFilters: [
+                { "floor.floorId": floorId },
+                { "room.roomId": roomId },
+              ],
+            }
+          );
+        }
       const deviceState = await getDeviceState(blockId, floorId, roomId);
-      if (client && msg?.status == "device connected" && (deviceState.previousState == "active" || devices[index] == "ON")) {
+      if (client && msg?.status == "device connected" && (deviceState.previousState == "active")) {
           let payload = { deviceId: `${index}`, command: "ON" };
-          console.log(`published: devices/${index}/control`);
+          console.log(`published: devices/${index}/control`, payload);
           client.publish(`devices/${index}/control`, JSON.stringify(payload));
           return;
         }
 
       // get state
-      const state = msg.status == "ON" ? "active" : "inactive";
+      const state = msg?.status == "ON" ? "active" : "inactive";
 
       // update db
       await blockModel.updateOne(

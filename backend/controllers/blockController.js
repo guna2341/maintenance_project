@@ -2,10 +2,8 @@ const blockModel = require("../model/blockModel");
 
 const getBlocks = async (req, res) => {
   try {
-    const blocks = await blockModel.find();
-    setTimeout(() => {
+    const blocks = await blockModel.find();dsa
       return res.status(200).json({blocks});
-    }, 3000);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
@@ -34,13 +32,11 @@ const getBlocks = async (req, res) => {
 
       const newBlock = await blockModel.create(processedBlock);
 
-      setTimeout(() => {
         return res
           .status(200)
           .json({ data: newBlock, message: "Block added successfully" });
-      }, 2000);
     } catch (err) {
-      if (err.code === 11000) {
+      if (err.code === 11000)     {
         return res.status(409).json({
           message: `Duplicate key error: ${Object.keys(
             err.keyValue
