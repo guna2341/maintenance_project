@@ -53,11 +53,11 @@ export const mqttConnect = () => {
 
   mqttClient.on("reconnect", () => {
     console.log("🔄 Attempting to reconnect to MQTT broker...");
-    addToast({
-      title: "Reconnecting",
-      description: "Attempting to reconnect to broker...",
-      color: "warning",
-    });
+    // addToast({
+    //   title: "Reconnecting",
+    //   description: "Attempting to reconnect to broker...",
+    //   color: "warning",
+    // });
   });
 
   mqttClient.removeAllListeners("message");

@@ -1,5 +1,5 @@
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
-import { AddBlock, Blocks, Close, Dashboard, Hamburger2 } from '../assets';
+import { AddBlock, Blocks, Close, Dashboard, Display, Hamburger2 } from '../assets';
 import React, { useEffect } from 'react';
 import { Tabs, Tab } from "@heroui/tabs";
 import { UseDashboardStore } from '../stores/dashboard';
@@ -27,6 +27,11 @@ export const SideBar = () => {
             label: "Add Block",
             link: "addBlock",
             icon: <AddBlock />
+        },
+        {
+            label: "block Id",
+            link: "displayId",
+            icon: <Display/>
         }
     ];
 
@@ -42,12 +47,16 @@ export const SideBar = () => {
         {
             label: "addBlock",
             routes: ["addBlock"]
+        },
+        {
+            label: "displayId",
+            routes: ["displayId"]
         }
     ];
 
     const currentLocation = location?.pathname.split("/")[2];
     const selectedKey = routes.find(item => item.routes.includes(currentLocation));
-
+    console.log(selectedKey.label)
     return (
         <Sidebar collapsedWidth="55px"
             rootStyles={{
@@ -82,7 +91,8 @@ export const SideBar = () => {
                         classNames={{
                             tabWrapper: "w-full",
                             tabList: "w-full bg-transparent",
-                            tab: 'w-full h-12 justify-start pl-2.5 font-medium text-custom-300 text-base',
+                            tab: 'w-full h-12 justify-start pl-0 font-medium text-custom-300 text-base',
+                            cursor:"pl-0"
                         }}
                     >
                         {menu.map((item) => (
@@ -90,9 +100,12 @@ export const SideBar = () => {
                             <Tab
                                 key={item.link} title={
                                     <div className='flex items-center gap-4'>
-                                        <span>
+                                        <span className={cn('pl-2.5', {
+                                            "pl-2":item.link == "displayId"
+                                        })}>
                                             {item.icon}
-                                        </span><span>
+                                        </span>
+                                        <span>
                                             {item?.label}
                                         </span>
                                     </div>

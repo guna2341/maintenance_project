@@ -15,13 +15,13 @@ export const DashboardLayout = ({ filteredBlock }) => {
             (floorSum, floor) =>
                 floorSum +
                 (floor?.rooms?.reduce(
-                    (roomSum, room) => roomSum + (room?.state === "active" ? 1 : 0),
+                    (roomSum, room) => roomSum + (room?.state === "active" && room?.status != "disconnected" ? 1 : 0),
                     0
                 ) || 0),
             0
         ),
-        inactive: blocks?.[index]?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, item) => roomSum + (item?.state === 'inactive' && item?.connected ? 1 : 0), 0), 0),
-        maintenance: blocks?.[index]?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, item) => roomSum + (item?.state === 'maintenance' || !item?.connected ? 1 : 0), 0), 0),
+        inactive: blocks?.[index]?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, item) => roomSum + (item?.state === 'inactive' && item?.status != "disconnected" ? 1 : 0), 0), 0),
+        maintenance: blocks?.[index]?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, item) => roomSum + (item?.state === 'maintenance' || item?.status == "disconnected"  ? 1 : 0), 0), 0),
     };
 
     return (
@@ -51,7 +51,7 @@ export const DashboardLayout = ({ filteredBlock }) => {
                             <div className="flex-1 flex flex-col gap-10 pb-2.5 overflow-y-auto scrollbar-thin scrollbar-thumb-custom-300/10 scrollbar-track-transparent">
                                 {blocks?.[index]?.floors?.map(item => {
                                     const states = {
-                                        active: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'active' ? 1 : 0), 0),
+                                        active: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'active' && item?.status != "disconnected" ? 1 : 0), 0),
                                         inactive: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'inactive' && item?.status != "disconnected" ? 1 : 0), 0),
                                         maintenance: item?.rooms?.reduce((sum, item) => sum + (item?.state === 'maintenance' || item?.status == "disconnected" ? 1 : 0), 0)
                                     };

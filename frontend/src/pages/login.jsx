@@ -155,11 +155,7 @@ export const LoginPage = () => {
                                         }}
                                     />
                                 </div>
-                                <div className="flex select-none justify-end text-sm my-2 cursor-pointer">
-                                    <span className="relative before:absolute  hover:text-custom-700 transition-all before:w-0 before:content-[''] before:bg-custom-700 before:h-[1px] before:rounded-full before:pb-[2px] pb-[2px] before:bottom-0 hover:before:w-full before:transition-all">
-                                        Forgot password?
-                                    </span>
-                                </div>
+
 
                                 <Button
                                     color="primary"
@@ -169,7 +165,7 @@ export const LoginPage = () => {
                                     isLoading={isLoading}
                                 >
                                     <span className='text-base'>
-                                        {isLoading ? "Signing in..." : "Sign In"}
+                                        {isLoading ? "logging in..." : "login In"}
                                     </span>
                                 </Button>
                             </div>

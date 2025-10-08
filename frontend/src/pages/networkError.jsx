@@ -105,7 +105,7 @@ export const NetworkError = () => {
                         </div>
                     </button>
 
-                    <button
+                    {/* <button
                         onClick={() => nav("/")}
                         className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
                         aria-label="Return to home page"
@@ -127,7 +127,7 @@ export const NetworkError = () => {
                             </svg>
                             Return Home
                         </div>
-                    </button>
+                    </button> */}
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-gray-200/50">
