@@ -2,10 +2,10 @@ import { StateCard } from './stateCard';
 import { OperationCard } from './operationCard';
 import { BlockHeader } from './blockHeader';
 import { ControlCard } from './controlCard';
-import { UseSwitchStore } from '../stores';
 import { addToast } from '@heroui/toast';
 import { CopySnippet } from './copySnippet';
 import { cn } from '@heroui/theme';
+import { UseSwitchStore } from '../stores/switchStore';
 
 export const BlockOverview = (
     {

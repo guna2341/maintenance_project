@@ -35,7 +35,7 @@ export const ControlCard = ({
       handleClick();
       return;
     }
-    if (!loading && connected && broker && !edit) {
+    if (!loading && broker && !edit) {
       setOpen(true);
     }
   }

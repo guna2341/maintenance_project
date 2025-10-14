@@ -12,9 +12,9 @@ import ErrorBoundry from "./components/errorBoundry.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
     <Provider>
-      <ErrorBoundry>
+      {/* <ErrorBoundry> */}
         <App />
-      </ErrorBoundry>
+      {/* </ErrorBoundry> */}
       </Provider>
     </BrowserRouter>
 );
