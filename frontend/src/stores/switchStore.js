@@ -62,7 +62,7 @@ export const UseSwitchStore = create((set, get) => ({
       if (!block || !floor || !room) return;
       const temp = room.state;
       room.state = state;
-      await new Promise((resolve) => set(resolve, 30000));
+      await new Promise((resolve) => setTimeout(resolve, 30000));
       UseDashboardStore.setState({
         loaders: { ...state.loaders, editLoading: false },
       });
