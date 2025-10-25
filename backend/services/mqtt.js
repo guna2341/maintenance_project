@@ -39,32 +39,33 @@ const connectMqtt = async () => {
     try {
       msg = message.toString();
       msg = JSON.parse(msg);
+      
       // publish status again on device connect
       console.log(msg)
-      if (msg?.status == "device connected") {
-          console.log(msg.status)
-          await blockModel.updateOne(
-            { blockId },
-            {
-              $set: {
-                "floors.$[floor].rooms.$[room].status": "connected",
-              },
-            },
-            {
-              arrayFilters: [
-                { "floor.floorId": floorId },
-                { "room.roomId": roomId },
-              ],
-            }
-          );
-        }
-      const deviceState = await getDeviceState(blockId, floorId, roomId);
-      if (client && msg?.status == "device connected" && (deviceState.previousState == "active")) {
-          let payload = { deviceId: `${index}`, command: "ON" };
-          console.log(`published: devices/${index}/control`, payload);
-          client.publish(`devices/${index}/control`, JSON.stringify(payload));
-          return;
-        }
+      // if (msg?.status == "device connected") {
+      //     console.log(msg.status)
+      //     await blockModel.updateOne(
+      //       { blockId },
+      //       {
+      //         $set: {
+      //           "floors.$[floor].rooms.$[room].status": "connected",
+      //         },
+      //       },
+      //       {
+      //         arrayFilters: [
+      //           { "floor.floorId": floorId },
+      //           { "room.roomId": roomId },
+      //         ],
+      //       }
+      //     );
+      //   }
+      // const deviceState = await getDeviceState(blockId, floorId, roomId);
+      // if (client && msg?.status == "device connected" && (deviceState.previousState == "active")) {
+      //     let payload = { deviceId: `${index}`, command: "ON" };
+      //     client.publish(`devices/${index}/control`, JSON.stringify(payload));
+      //     console.log(`published: devices/${index}/control`, payload);
+      //     return;
+      //   }
 
       // get state
       const state = msg?.status == "ON" ? "active" : "inactive";
@@ -76,7 +77,6 @@ const connectMqtt = async () => {
           $set: {
             "floors.$[floor].rooms.$[room].state": state,
             "floors.$[floor].rooms.$[room].previousState": state,
-            
            },
         },
         {

@@ -32,7 +32,6 @@ export const UseSwitchStore = create((set, get) => ({
           }
         : block
     );
-    console.log("switch: ", newBlocks); 
 
     UseDashboardStore.setState({ blocks: newBlocks });
     return {
@@ -50,7 +49,7 @@ export const UseSwitchStore = create((set, get) => ({
         loaders: { ...state.loaders, editLoading: true },
       });
       const blocks = dashboardStore.blocks;
-      const response = await apiClient.post(endpoints.SWITCHSTATUS, {
+      await apiClient.post(endpoints.SWITCHSTATUS, {
         blockId,
         floorId,
         roomId,
@@ -60,13 +59,12 @@ export const UseSwitchStore = create((set, get) => ({
       const floor = block.floors.find((floor) => floor.floorId === floorId);
       const room = floor.rooms.find((room) => room.roomId === roomId);
       if (!block || !floor || !room) return;
-      const temp = room.state;
       room.state = state;
-      // return;
       await new Promise((resolve) => setTimeout(resolve, 30000));
       UseDashboardStore.setState({
         loaders: { ...state.loaders, editLoading: false },
       });
+      
       return {
         state: !get().loading,
         message: "Some error occured.Refresh the page and try again.",

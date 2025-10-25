@@ -23,8 +23,8 @@ export const DashboardLayout = ({ filteredBlock }) => {
         inactive: blocks?.[index]?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, item) => roomSum + (item?.state === 'inactive' && item?.status != "disconnected" ? 1 : 0), 0), 0),
         maintenance: blocks?.[index]?.floors?.reduce((sum, floor) => sum + floor?.rooms?.reduce((roomSum, item) => roomSum + (item?.state === 'maintenance' || item?.status == "disconnected"  ? 1 : 0), 0), 0),
     };
-
     return (
+    
         <>
             <div className='mt-3 sm:mt-1'>
                 <SwiperComponent

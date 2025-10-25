@@ -56,7 +56,7 @@ export const SideBar = () => {
 
     const currentLocation = location?.pathname.split("/")[2];
     const selectedKey = routes.find(item => item.routes.includes(currentLocation));
-    console.log(selectedKey.label)
+
     return (
         <Sidebar collapsedWidth="55px"
             rootStyles={{

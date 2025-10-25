@@ -16,12 +16,10 @@ export const UseDashboardStore = create((set, get) => ({
 
   handleOnline: async () => {
     set({ networkError: true });
-    console.log("Online");
    },
   
   handleOffline: () => {
     set({ networkError: false });
-    console.log("Offline");
   },
 
   setDashboard: (key, value) => {

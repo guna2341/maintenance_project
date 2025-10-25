@@ -11,28 +11,32 @@ export const lastWill = async () => {
   client = mqtt.connect(brokerURL);
 
   client.on("connect", () => {
-    console.log("✅ Connected to LAST WILL");
+    console.log("Connected to LAST WILL");
 
-    // subscribe to will
+    // subscribe to will topic
     client.subscribe("devices/+/+/+/lastwill", (err) => {
       if (!err) console.log("Subscribed to LWT topic");
     });
   });
 
-  // get messages
+  // handle incoming messages
   client.on("message", async (topic, message) => {
-    let msg;
     try {
+      let msg;
       try {
         msg = JSON.parse(message.toString());
-      } catch (e) {
+      } catch {
         msg = { status: message.toString() };
       }
+      console.log("Last Will:", topic + " status:" + msg.status);
+
       const parts = topic.split("/");
       const blockId = parts[1];
       const floorId = parts[2];
       const roomId = parts[3];
-      if (msg.status == "device disconnected") {
+
+      // handle device disconnected
+      if (msg.status === "device disconnected") {
         UseDashboardStore.setState((prev) => {
           const updatedBlocks = prev.blocks.map((block) => {
             if (block.blockId !== blockId) return block;
@@ -60,14 +64,53 @@ export const lastWill = async () => {
 
           return { blocks: updatedBlocks };
         });
+
+        // Optional toast
+        // addToast({
+        //   title: "MQTT Update",
+        //   description: `${roomId} has been disconnected`,
+        //   color: "danger",
+        // });
       }
-      addToast({
-        title: "MQTT Update",
-        description: `${roomId} has been disconnected`,
-        color: "danger",
-      });
+
+      // handle device connected
+      if (msg.status === "device connected") {
+        UseDashboardStore.setState((prev) => {
+          const updatedBlocks = prev.blocks.map((block) => {
+            if (block.blockId !== blockId) return block;
+
+            return {
+              ...block,
+              floors: block.floors.map((floor) => {
+                if (floor.floorId !== floorId) return floor;
+
+                return {
+                  ...floor,
+                  rooms: floor.rooms.map((room) =>
+                    room.roomId === roomId
+                      ? {
+                          ...room,
+                          status: "connected",
+                        }
+                      : room
+                  ),
+                };
+              }),
+            };
+          });
+
+          return { blocks: updatedBlocks };
+        });
+
+        // Optional toast
+        // addToast({
+        //   title: "MQTT Update",
+        //   description: `${roomId} has been connected`,
+        //   color: "success",
+        // });
+      }
     } catch (err) {
-      console.log(err);
+      console.error("Error processing last will:", err);
     }
   });
 };

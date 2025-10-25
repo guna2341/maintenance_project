@@ -71,12 +71,12 @@ export const mqttConnect = () => {
       const blockId = parts[1];
       const floorId = parts[2];
       const roomId = parts[3];
+      // console.log(msg.status)
       if (
         msg?.status == "device connected" ||
         msg?.status == "device disconnected"
       ) {
-        const deviceState =
-          msg?.status == "device connected" ? "connected" : "disconnected";
+        const deviceState = msg?.status == "device connected" ? "connected" : "disconnected";
         UseDashboardStore.setState((prev) => {
           const updatedBlocks = prev.blocks.map((block) => {
             if (block.blockId !== blockId) return block;
@@ -100,24 +100,24 @@ export const mqttConnect = () => {
               }),
             };
           });
-          addToast({
-            title: "MQTT Update",
-            description: `${roomId} Device Connected`,
-            color: "success",
-          });
+          // addToast({
+          //   title: "MQTT Update",
+          //   description: `${roomId} Device Connected`,
+          //   color: "success",
+          // });
           return { blocks: updatedBlocks };
         });
         return;
       }
       message = message.toString();
-      console.log(message);
+      // console.log("mqtt:",blockId,floorId,roomId,message);
       const response = store.switchState(
         blockId,
         floorId,
         roomId,
         msg.status == "ON" ? "active" : "inactive"
       );
-      if (response.state) {
+      if (response.state && msg?.status != "disconnected") {
         addToast({
           title: "MQTT Update",
           description: response.message,

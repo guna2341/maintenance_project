@@ -75,16 +75,18 @@ export const BlockOverview = (
                         </div> :
                         <div className='flex flex-wrap items-center gap-2.5 gap-y-4.5 w-full overflow-auto'>
                             {!displayId ?
-                                rooms?.map((item, index) => (
-                                    <ControlCard
-                                        key={index}
-                                        connected={item?.status == "connected" ? true : false}
-                                        handleClick={(e) => handleBlock(item?.roomId, e)}
-                                        loading={loading}
-                                        state={item?.state}
-                                        roomName={item?.room}
-                                    />
-                                ))
+                                rooms?.map((item, index) => {
+                                    return (
+                                        <ControlCard
+                                            key={index}
+                                            connected={item?.status == "connected" ? true : false}
+                                            handleClick={(e) => handleBlock(item?.roomId, e)}
+                                            loading={loading}
+                                            state={item?.state}
+                                            roomName={item?.room}
+                                        />
+                                    )
+                                })
                                 :
                                 <div className='flex flex-wrap items-center gap-2.5 w-full overflow-auto'>
                                     {rooms?.map(item => (
